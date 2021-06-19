@@ -1,0 +1,13 @@
+
+// Custom card because it doesn't want to import the components module in the app.module
+.custom-card {
+  background-color: lightgrey;
+}
+
+.text {
+  font-size: 0.85rem;
+  font-family: 'Courier New', Courier, monospace;
+  padding-top: 1px;
+  background-color: green;
+  margin-bottom: 5px;;
+}

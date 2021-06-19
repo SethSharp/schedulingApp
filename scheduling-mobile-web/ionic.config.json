@@ -1,0 +1,7 @@
+{
+  "name": "scheduling-mobile-web",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
