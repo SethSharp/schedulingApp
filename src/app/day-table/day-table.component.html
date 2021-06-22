@@ -1,3 +1,10 @@
-<div (click)="test(i)" style="background-color: lightgrey;" *ngFor="let ses of day; let i = index" [style.margin-top.px]="getAmount(ses.start, i, day)" [style.height.px]="getHeight(ses.len)" > <!-- [style.height.px]="getAmount(ses.len/100)" [style.margin-top.px]="getMargin(ses.start*6,i,testMonday)" -->
-  <p> {{ses.title}} </p>
+<div  class="custom-card"
+      *ngFor="let ses of day; let i = index"
+      [style.margin-top.px]="getAmount(ses.start, i, day)"
+      [style.height.px]="getHeight(ses.len)"
+      (click)="getFunction(ses.title, i, day)"
+      [style.background-color]="getColour(ses.title)"
+      >
+  {{ ses.title}}
+
 </div>

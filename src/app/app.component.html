@@ -25,13 +25,15 @@
   </mat-grid-tile>
 
   <mat-grid-tile *ngFor="let d of days; let j = index"  [colspan]=2>
-    <div  style="background-color: red; width: 140px; height: 1500px;">
+    <div style="width: 140px; height: 1500px;">
       <!-- Going to have 7 sections for 7 components, this is testing with dynamic -->
 
       <app-day-table
         [getAmount]="getAmount"
         [getHeight]="getHeight"
         [day]="testMonday"
+        [viewSession]="viewEditSession"
+        [insertSession]="insertSession"
       > </app-day-table>
 
     </div>

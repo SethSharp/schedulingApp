@@ -7,20 +7,32 @@ import { MatCard } from '@angular/material/card';
   templateUrl: './day-table.component.html',
   styleUrls: ['./day-table.component.scss'],
 })
-
 export class DayTableComponent implements OnInit {
+  @Input() day: any;
+  @Input() getAmount: any;
+  @Input() getHeight: any;
+  @Input() viewSession: any;
+  @Input() insertSession: any;
 
-  @Input() day:any;
-  @Input() getAmount:any;
-  @Input() getHeight:any;
+  constructor() {}
 
-  constructor() { }
+  ngOnInit(): void {console.log(this.day)}
 
-  ngOnInit(): void {
+  getFunction(title: string, i: number, day: any) {
+    if (title.length == 1) {
+      return this.insertSession(i, day);
+    }
+    return this.viewSession(i);
   }
 
-  test(n:number) {
-    console.log("Clicked " + n)
+  getColour(t: string) {
+    if (t.length == 1) {
+      return 'green';
+    }
+    return 'red';
   }
 
+  getPos(s: number) {
+    return (s - 8)*100;
+  }
 }

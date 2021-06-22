@@ -1,7 +1,11 @@
 
 // Custom card because it doesn't want to import the components module in the app.module
 .custom-card {
-  background-color: lightgrey;
+  background-color: #e3e4e6;
+  text-align: center;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .text {
