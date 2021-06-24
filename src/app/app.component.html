@@ -1,45 +1,54 @@
+<!-- Want to make a component but keep getting error, event is not assigned to type boolean for [(opened)]=...-->
 
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" class="side-bar">
 
-<br>
+    <h1> Create a session </h1>
 
-<mat-grid-list cols="15" rowHeight="50px" >
-  <!-- Generatig the column titles-->
-  <mat-grid-tile *ngFor="let head of headerContent" [colspan]=head.s>
-    {{head.t}}
-  </mat-grid-tile>
+    <app-custom-day-block [createSession]="createSession"></app-custom-day-block>
 
-</mat-grid-list>
+  </mat-sidenav>
 
-<mat-grid-list cols="15" rowHeight="1500px" style="margin-top: 3px;">
+  <mat-sidenav-content>
 
-  <mat-grid-tile [colspan]=1>
-    <div class="internalMatGrid">
-      <mat-grid-list cols="1" rowHeight="100px" *ngFor="let time of times" >
-      <mat-grid-tile [colspan]=1>
-        {{time}}
+    <p>
+      <button mat-button (click)="sidenav.toggle()"> Menu </button>
+    </p>
+
+    <mat-grid-list cols="15" rowHeight="50px">
+      <mat-grid-tile *ngFor="let head of headerContent" [colspan]="head.s">
+        {{ head.t }}
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <mat-grid-list cols="15" rowHeight="1500px" style="margin-top: 3px">
+      <mat-grid-tile [colspan]="1">
+        <div class="internalMatGrid">
+          <mat-grid-list cols="1" rowHeight="100px" *ngFor="let time of times">
+            <mat-grid-tile [colspan]="1">
+              {{ time }}
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
       </mat-grid-tile>
 
+      <mat-grid-tile *ngFor="let d of days; let j = index" [colspan]="2">
+        <div style="width: 140px; height: 1500px">
+          <app-day-table
+            [getAmount]="getAmount"
+            [getHeight]="getHeight"
+            [day]="testMonday"
+            [viewSession]="viewEditSession"
+            [insertSession]="insertSession"
+          >
+          </app-day-table>
+        </div>
+      </mat-grid-tile>
     </mat-grid-list>
-    </div>
-
-  </mat-grid-tile>
-
-  <mat-grid-tile *ngFor="let d of days; let j = index"  [colspan]=2>
-    <div style="width: 140px; height: 1500px;">
-      <!-- Going to have 7 sections for 7 components, this is testing with dynamic -->
-
-      <app-day-table
-        [getAmount]="getAmount"
-        [getHeight]="getHeight"
-        [day]="testMonday"
-        [viewSession]="viewEditSession"
-        [insertSession]="insertSession"
-      > </app-day-table>
-
-    </div>
-  </mat-grid-tile>
-</mat-grid-list>
-<br>
+    <br />
 
 
+  </mat-sidenav-content>
+  <p><button mat-button (click)="sidenav.toggle()">+</button></p>
 
+</mat-sidenav-container>

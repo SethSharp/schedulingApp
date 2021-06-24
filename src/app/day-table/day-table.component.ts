@@ -1,6 +1,5 @@
 import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { MatCard } from '@angular/material/card';
 
 @Component({
   selector: 'app-day-table',
@@ -16,17 +15,17 @@ export class DayTableComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {console.log(this.day)}
+  ngOnInit(): void {}
 
   getFunction(title: string, i: number, day: any) {
-    if (title.length == 1) {
+    if (title=='') {
       return this.insertSession(i, day);
     }
     return this.viewSession(i);
   }
 
   getColour(t: string) {
-    if (t.length == 1) {
+    if (t=='') {
       return 'green';
     }
     return 'red';

@@ -1,10 +1,10 @@
-<div  class="custom-card"
+<div [style.height.px]="getHeight(ses.len)" [style.background-color]="getColour(ses.title)"
       *ngFor="let ses of day; let i = index"
       [style.margin-top.px]="getAmount(ses.start, i, day)"
-      [style.height.px]="getHeight(ses.len)"
       (click)="getFunction(ses.title, i, day)"
-      [style.background-color]="getColour(ses.title)"
       >
-  {{ ses.title}}
+    {{ ses.title }}
 
 </div>
+
+

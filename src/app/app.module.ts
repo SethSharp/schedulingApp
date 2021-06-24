@@ -1,17 +1,14 @@
 
 
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ComponentModule } from './component.module';
-
-import { MatCardModule } from '@angular/material/card';
-import { MatGridListModule } from '@angular/material/grid-list';
-
-
+import { MaterialModule } from './material.module';
+import { MatTimepickerModule } from 'mat-timepicker';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,10 +17,12 @@ import { MatGridListModule } from '@angular/material/grid-list';
     AppRoutingModule,
     NoopAnimationsModule,
     ComponentModule,
-    MatCardModule,
-    MatGridListModule
+    MaterialModule,
+    MatTimepickerModule
   ],
   providers: [],
+  entryComponents: [],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

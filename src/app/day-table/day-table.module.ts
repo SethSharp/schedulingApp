@@ -1,13 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MatCard } from '@angular/material/card';
+// import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    MatCard
-  ]
+  imports: [CommonModule],
 })
-export class DayTableModule { }
+export class DayTableModule {}
