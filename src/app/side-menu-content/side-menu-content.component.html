@@ -1,0 +1,55 @@
+<div>
+   <h2 mat-dialog-title> Create new session</h2>
+
+  <mat-form-field appearance="fill">
+    <mat-label> Add a block on ...</mat-label>
+    <mat-select [(ngModel)]="isSelected">
+      <mat-option *ngFor="let d of days" (click)="setDay(d)" >
+        {{d.d}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field float appearance="outline">
+    <mat-label> Title </mat-label>
+    <input matInput required type="text" [(ngModel)]="title" />
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field float appearance="outline">
+    <mat-label> Start time </mat-label>
+    <input
+      matTimepicker
+      placeholder="Start time"
+      [(ngModel)]="startTime"
+      mode="24h"
+      [minDate]="min"
+      [maxDate]="max"
+    />
+  </mat-form-field>
+
+  <div>
+    <!-- <mat-form-field float appearance="outline">
+      <mat-label> Length (Minutes) </mat-label>
+      <input matInput required type="number" [(ngModel)]="obj.l" >
+    </mat-form-field> -->
+    <mat-form-field float appearance="outline">
+      <mat-label> End time </mat-label>
+      <input
+        matTimepicker
+        placeholder="End time..."
+        [(ngModel)]="endTime"
+        mode="24h"
+        [minDate]="min"
+        [maxDate]="max"
+      />
+    </mat-form-field>
+  </div>
+
+  <p> {{warning}} </p>
+
+  <button mat-button (click)="createSession()"> Confirm </button>
+</div>

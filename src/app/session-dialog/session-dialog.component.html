@@ -1,20 +1,26 @@
-
 <div class="c">
-  <h2 mat-dialog-title> Enter in session details for {{data.day}}</h2>
+  <h2 mat-dialog-title>Enter in session details for {{ data.day }}</h2>
 
   <mat-form-field float appearance="outline">
     <mat-label> Title </mat-label>
-    <input matInput required [(ngModel)]="obj.t">
+    <input matInput required [(ngModel)]="title" />
   </mat-form-field>
 
-  <mat-form-field float appearance="outline">
+  <!-- <mat-form-field float appearance="outline">
     <mat-label> Add a break? </mat-label>
       <input (change)="changeBreak()" matInput type="number" [(ngModel)]="break" >
-    </mat-form-field>
+    </mat-form-field> -->
 
   <mat-form-field float appearance="outline">
     <mat-label> Start time </mat-label>
-    <input matTimepicker placeholder="Start time" [(ngModel)]="time"mode="24h" [minDate]="min" [maxDate]="max">
+    <input
+      matTimepicker
+      placeholder="Start time"
+      [(ngModel)]="startTime"
+      mode="24h"
+      [minDate]="min"
+      [maxDate]="max"
+    />
   </mat-form-field>
 
   <div>
@@ -24,22 +30,35 @@
     </mat-form-field> -->
     <mat-form-field float appearance="outline">
       <mat-label> End time </mat-label>
-      <input matTimepicker placeholder="End time..." [(ngModel)]="endTime" mode="24h" [minDate]="min" [maxDate]="max">
+      <input
+        matTimepicker
+        placeholder="End time..."
+        [(ngModel)]="endTime"
+        mode="24h"
+        [minDate]="min"
+        [maxDate]="max"
+      />
     </mat-form-field>
   </div>
 
+  <div style="padding-top: 5px; padding-bottom: 5px;">
+    <input [(colorPicker)]="color" [style.background]="color"/>
+  </div>
+  <br>
 
+  <mat-label style="color: red"> {{ warning }}</mat-label>
 
-  <mat-label style="color: red;"> {{warning}}</mat-label>
-
-
-
-  <div style="background-color: lightgoldenrodyellow; text-align: center;">
-  <mat-dialog-actions>
-    <button mat-button (click)="cancel()"> Cancel </button>
-    <button mat-button (click)="something()" cdkFocusInitial> Create </button>
-  </mat-dialog-actions>
+  <div style="background-color: lightgoldenrodyellow; text-align: center">
+    <mat-dialog-actions>
+      <button mat-button required (click)="cancel()">Cancel</button>
+      <button
+        mat-button
+        required
+        (click)="submitSessionBlock()"
+        cdkFocusInitial
+      >
+        Create
+      </button>
+    </mat-dialog-actions>
   </div>
 </div>
-
-

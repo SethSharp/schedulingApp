@@ -10,6 +10,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTimepickerModule } from 'mat-timepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { ColorPickerModule } from 'ngx-color-picker'
+
 
 @NgModule({
   declarations: [],
@@ -23,6 +25,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatSidenavModule,
     MatTimepickerModule,
     MatFormFieldModule,
+    ColorPickerModule,
   ],
   // Export the modules, so then app module can see them
   exports: [
@@ -35,6 +38,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatSelectModule,
     MatTimepickerModule,
     MatFormFieldModule,
+    ColorPickerModule,
   ],
 })
 export class MaterialModule {}

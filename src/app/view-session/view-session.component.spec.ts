@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CustomDayBlockComponent } from './custom-day-block.component';
+import { ViewSessionComponent } from './view-session.component';
 
-describe('CustomDayBlockComponent', () => {
-  let component: CustomDayBlockComponent;
-  let fixture: ComponentFixture<CustomDayBlockComponent>;
+describe('ViewSessionComponent', () => {
+  let component: ViewSessionComponent;
+  let fixture: ComponentFixture<ViewSessionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CustomDayBlockComponent ]
+      declarations: [ ViewSessionComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CustomDayBlockComponent);
+    fixture = TestBed.createComponent(ViewSessionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

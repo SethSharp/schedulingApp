@@ -1,3 +1,5 @@
+import { Session } from './../session';
+import { GeneralFunctionsService } from './../Services/general-functions.service';
 
 import { Component, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -10,17 +12,13 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./session-dialog.component.scss'],
 })
 export class SessionDialogComponent implements OnInit {
-  obj = {
-    s: 10.5,
-    t: null,
-    l: 0,
-    i: 0,
-    day: '',
-  };
+  title = '';
   warning = '';
-  break = 0
-  time: Date = new Date();
-  endTime: Date = new Date()
+  break = 0;
+  originalStart = 0;
+  color = '#2b00ff';
+  startTime: Date = new Date();
+  endTime: Date = new Date();
   min: Date = new Date();
   max: Date = new Date();
 
@@ -28,22 +26,21 @@ export class SessionDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<SessionDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      insertSession: boolean;
       sessions: any;
       day: string;
-      lHour: number;
-      lMin: number;
-      uHour: number;
-      uMin: number;
-    }
+      startTime: Date;
+      endTime: Date;
+    },
+    private gService: GeneralFunctionsService
   ) {
-    this.min.setHours(this.data.lHour);
-    this.min.setMinutes(this.data.lMin);
-    this.time.setHours(this.min.getHours());
-    this.time.setMinutes(this.min.getMinutes());
-    this.max.setHours(this.data.uHour);
-    this.max.setMinutes(this.data.uMin+1);
-    this.endTime = this.time
+    this.min = this.data.startTime;
+    this.startTime = this.gService.setTime(
+      this.min.getHours(),
+      this.min.getMinutes()
+    );
+    this.max = this.data.endTime;
+    this.endTime = this.startTime;
+    this.originalStart = this.startTime.getMinutes();
   }
 
   ngOnInit(): void {}
@@ -52,82 +49,46 @@ export class SessionDialogComponent implements OnInit {
     this.dialogRef.close(null);
   }
 
-  changeBreak() {
-    this.time.setMinutes(this.break)
-  }
-  something() {
-    if (this.obj.t == null) {
-      this.warning = 'Error: Enter in a title'
-      return
-    }
-    if (this.data.insertSession) {
-      this.checkDefaultRanges();
-    } else {
-      this.checkAllSessionRanges();
-    }
-  }
-
-  checkAllSessionRanges() {
-    let start = this.time.getHours();
-    let len = this.time.getMinutes();
-    for (let i = 0; i < this.data.sessions.length; i++) {
-      if (this.data.sessions[i].title == '') continue;
-      // Have a session to work with
-      let sesh = this.data.sessions[i];
-      // Ensure the start isn't at the start or within another session
-      if (start >= sesh.start && start < this.getLen(sesh)) continue;
-
-      // Since the start is good, need to check the length and that it doesn overlap
-      if (start + len / 100 >= sesh.start) continue;
-
-      this.obj.i = i > 0 ? i - 1 : 0;
-      // Soon to be added to dialog
-      this.obj.day = 'Monday';
-      this.dialogRef.close(this.obj);
+  submitSessionBlock() {
+    if (this.title == '') {
+      this.warning = 'Error: Enter in a title';
       return;
     }
-    console.log('FAILED');
+    if (this.checkRanges()) return;
+    let obj = this.gService.createNewSessionObject(
+      this.title,
+      this.startTime,
+      this.endTime,
+      this.color
+    );
+    this.dialogRef.close(obj);
   }
 
-  getLen(day: any) {
-    return day.start + day.len / 100;
+  changeBreak() {
+    this.startTime.setMinutes(this.originalStart + this.break);
   }
 
-  convertTimeToPx(n: number) {
-    let x = 100 / n;
-    let y = 60 / Math.floor(x);
-    return Math.ceil(y);
-  }
-
-  checkDefaultRanges() {
-    if (this.checkRanges(this.obj.l)) return;
-    this.obj.s = this.time.getHours();
-    if (this.time.getMinutes() != 0) {
-      this.obj.s += this.time.getMinutes()/60;
-    }
-    this.obj.l = (this.endTime.getMinutes() / 60)*100 + (this.endTime.getHours()-this.time.getHours())*100;
-    this.dialogRef.close(this.obj);
-  }
-
-  checkRanges(l: number) {
+  checkRanges() {
     this.warning = 'Error: ';
-    if (this.endTime.getMinutes()-this.time.getMinutes() == 0 && this.endTime.getHours() == this.time.getHours()) {
-      this.warning += ' Session needs to be longer';
+    if (this.startTime == this.endTime) {
+      console.log('EQUAL');
+      this.warning += ' Need some length';
       return true;
     }
-    // Getting the new end time, then comparing with the max allowed time
-    // let newTime: Date = new Date()
-    // newTime.setHours(this.time.getHours())
-    // newTime.setMinutes(this.obj.l+this.time.getMinutes())
-
     if (this.endTime > this.max) {
       if (this.endTime >= this.max) {
-        this.obj.l-1
-        return false
+        //this.obj.l - 1;
+        return false;
       }
-      console.log(this.max)
-      this.warning += ' Session overlaps'
-      return true
+      console.log('...');
+      this.warning += ' Session overlaps';
+      return true;
+    } else {
+      if (this.endTime < this.startTime) {
+        let x = this.gService.getTimeString(this.startTime);
+        this.warning += ' Enter a time greater then: ' + x;
+        return true;
+      }
     }
     return false;
   }

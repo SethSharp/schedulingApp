@@ -4,15 +4,22 @@ import { FormsModule } from '@angular/forms';
 
 import { DayTableComponent } from './day-table/day-table.component';
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
-import { CustomDayBlockComponent } from './custom-day-block/custom-day-block.component';
+import { SideMenuContentComponent } from './side-menu-content/side-menu-content.component';
+import { ViewSessionComponent } from './view-session/view-session.component';
 import { MaterialModule } from './material.module';
 @NgModule({
   declarations: [
     DayTableComponent,
     SessionDialogComponent,
-    CustomDayBlockComponent,
+    ViewSessionComponent,
+    SideMenuContentComponent,
   ],
-  exports: [DayTableComponent, SessionDialogComponent, CustomDayBlockComponent],
+  exports: [
+    DayTableComponent,
+    SessionDialogComponent,
+    ViewSessionComponent,
+    SideMenuContentComponent,
+  ],
   imports: [CommonModule, FormsModule, MaterialModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

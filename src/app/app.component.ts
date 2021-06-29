@@ -3,7 +3,8 @@ import { SessionDialogComponent } from './session-dialog/session-dialog.componen
 import { Component, OnInit } from '@angular/core';
 import { Session } from './session';
 import { MatDialog} from '@angular/material/dialog'
-import {FormControl} from '@angular/forms';
+import { ViewSessionComponent } from './view-session/view-session.component';
+import { GeneralFunctionsService } from './Services/general-functions.service';
 
 @Component({
   selector: 'app-root',
@@ -11,37 +12,45 @@ import {FormControl} from '@angular/forms';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-
-  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some((h) =>
-    h.test(window.location.host)
-  );
-
   // Future use some sort of storage and service
-  // Use some objects to store each session (time, title, length, info etc)
-  testMonday: Session[] = [];
-  days: Object[] = [];
+  mon: Session[] = [];
+  tue: Session[] = [];
+  wed: Session[] = [];
+  thu: Session[] = [];
+  fri: Session[] = [];
+  sat: Session[] = [];
+  sun: Session[] = [];
+
+  days = [
+    { d: 'Monday', sessions: this.mon },
+    { d: 'Tuesday', sessions: this.tue },
+    { d: 'Wednesday', sessions: this.wed },
+    { d: 'Thursday', sessions: this.thu },
+    { d: 'Friday', sessions: this.fri },
+    { d: 'Saturday', sessions: this.sat },
+    { d: 'Sunday', sessions: this.sun },
+  ];
+
   rowHeight = 100;
   height = 1500;
   startTime = 8;
   endTime = 23;
   breakTime = 15;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(
+    public dialog: MatDialog,
+    private gService: GeneralFunctionsService
+  ) {}
 
   ngOnInit(): void {
     // Temporarily adding sessions here, until modal is created
-    this.createSesh();
+    this.initialiseTable();
   }
 
-  createSesh() {
-    // 25 => 15, it is a percentage
-    this.testMonday.push(new Session('Breakfast', 10, 16));
-    this.testMonday.push(new Session('Lunch', 12, 100));
-    this.testMonday.push(new Session('Dinner', 18, 120));
-    this.testMonday.push(new Session('After dinner', 20, 100));
-    this.sortSessions(this.testMonday);
-    this.days = [{ d: 'MON', sessions: this.testMonday }];
-    this.addBlankSessions(this.testMonday);
+  initialiseTable() {
+    for (let i = 0; i < this.days.length; i++) {
+      this.addBlankSessions(this.days[i].sessions);
+    }
   }
 
   times = [
@@ -72,9 +81,6 @@ export class AppComponent implements OnInit {
     { t: 'SUN', s: 2 },
   ];
 
-  lengths = [30, 60, 90];
-  breaks = [5, 90, 17];
-
   timeToPx(s: number) {
     return (s - 8) * this.rowHeight;
   }
@@ -99,79 +105,64 @@ export class AppComponent implements OnInit {
     s: 0,
     l: 0,
     i: 0,
-    day: ''
+    day: '',
   };
-  isInt(n:number) {
-    return n%1==0
-  }
-  convertPxToTime(n:number) {
-    let x = 100/n
-    let y = 60/x
-    return Math.ceil(y)
-  }
-  // When the user clicks on a blank session. It will create a new one inserting at
-  insertSession = (i: number, days: any) => {
-    // Ranges for the modal to stay within
-    let lHour = days[i].start
-    let lMin = 0
-    let x = this.isInt(lHour);
+
+  // When the user clicks on a blank session. It will create a new one inserting at...
+  insertSession = (i: number, days: any, title:string) => {
+    let startTime = new Date();
+    let s = days[i].start;
+    startTime.setHours(s);
+    startTime.setMinutes(0);
+    startTime.setSeconds(0);
+    let x = this.gService.isInt(s);
+    console.group(s);
     if (!x) {
-      // Then it is a whole number, so a even time => 10, 11 not 10.2 or 11.8
-      let t = Math.floor(lHour)
-      lMin = +((lHour % t).toFixed(2))
-      let pxAmount = lMin*100
-      lMin = this.convertPxToTime(pxAmount)
+      console.log('HERE');
+      startTime.setMinutes(this.gService.convertDecimalPxToTime(s));
     }
-    let uHour = 21;
-    let uMin = 59;
-    if (days[i].len > 59) {
-      let t = days[i].len%100
-      uHour = Math.floor(Math.floor(days[i].len/100)+lHour)-1
-      let x = +(100/t).toFixed(2)
-      if ((i>0 && !this.isInt(days[i].start)) == true){
-        uMin = Math.floor(60/x)+Math.ceil(this.convertPxToTime(days[i-1].len))
-      }
-      if (uMin >= 60) uMin=59, uHour+=1
+    let endTime = new Date();
+    let y = this.gService.getUMinHour(days, i);
+    endTime.setHours(startTime.getHours() + y.getHours());
+    console.log(y.getMinutes());
+    let minutes = y.getMinutes() + startTime.getMinutes();
+    if (minutes == 60) {
+      endTime.setMinutes(59);
+    } else {
+      endTime.setMinutes(minutes);
     }
-    this.openSessionDialog(true, days, "Test", i, lHour, lMin, uHour, uMin);
+    this.openSessionDialog(days, title, i, startTime, endTime);
   };
 
-  // Used to create a general new session, using a modal to get information
-  createSession = (day:string) => {
-    // Use day to pass in specific day
-    this.openSessionDialog(false, this.testMonday, day)
-    // Creates a session, when
-  };
-
-  openSessionDialog(type:boolean, days: any=0, day:string = '', i: number=0,
-                    lHour:number=8, lMin:number=0, uHour:number=22, uMin:number=59) {
+  openSessionDialog(
+    days: any = 0,
+    day: string,
+    i: number = 0,
+    start = new Date(),
+    end = new Date()
+  ) {
     const dialogRef = this.dialog.open(SessionDialogComponent, {
       height: '500px',
       width: '400px',
-      data: { insertSession: type, sessions: days, day:day, lHour:lHour, lMin:lMin,uHour:uHour,uMin:uMin},
+      data: { sessions: days, day: day, startTime: start, endTime: end },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.testSession = result;
-
+      // this.testSession = result;
       try {
-        if (this.testSession != null) this.insertData(i, days);
-      }
-      catch {
-        return
+        let newS = new Session(result.t, result.s, result.l, result.c);
+        if (this.testSession != null) this.insertData(i, days, newS);
+      } catch {
+        return;
       }
     });
   }
 
-  insertData(i: number, days: any) {
-    let newData = new Session(
-      this.testSession.t,
-      this.testSession.s,
-      this.testSession.l
-    );
+  insertData = (i: number, days: any, newData: Session) => {
     days[i].len = this.timeToPx(newData.start) - this.timeToPx(days[i].start);
-    // Adding in the new session, into the correct spot. After the break
+
     days.splice(i + 1, 0, newData);
 
+    // Adding in the new session, into the correct spot. After the break
     let start = this.getEndTime(newData);
     if (newData.start == days[i].start) {
       // Removes blank session
@@ -189,7 +180,8 @@ export class AppComponent implements OnInit {
         this.insertEndSession(days, start);
       }
     }
-  }
+    console.log(days);
+  };
 
   insertMiddleSesh(days: any, i: number) {
     // This is when there will be a session inserted, with a blank either side
@@ -226,15 +218,23 @@ export class AppComponent implements OnInit {
     days.push(newBlank);
   }
 
-  viewEditSession = (i: number) => {
+  viewEditSession = (day: any) => {
     // View a session/edit the session details; time, title, notes?...
-    console.log('CLicked ' + i);
+    this.dialog.open(ViewSessionComponent, {
+      height: '150px',
+      width: '300px',
+      data: { session: day },
+    });
   };
 
   // When creating a session, a blank session will fille the gaps where there are none
   // Just so its easy for the user to click on a blank session to insert a new one a that time
   addBlankSessions(day: any) {
     let blanks: Session[] = [];
+    if (day.length == 0) {
+      day.push(new Session('', 8, 1500));
+      return;
+    }
     for (let i = 0; i < day.length; i++) {
       // break time is a const amount of time between each session, since beginning no need...
       // Beginning of day check
@@ -284,22 +284,5 @@ export class AppComponent implements OnInit {
     let x = this.timeToPx(day[i].start);
     let y = this.timeToPx(day[i + 1].start);
     return y - x;
-  }
-
-  // Sorts a session array based on their starting times...
-  sortSessions(session: any) {
-    for (let i = 0; i < session.length; i++) {
-      if (session[i].title.length == 1) {
-        session.splice(i, 1);
-        continue;
-      }
-      for (let j = 0; i < session.length && i != j; j++) {
-        if (session[i].start < session[j].start) {
-          let temp = session[j];
-          session[j] = session[i];
-          session[i] = temp;
-        }
-      }
-    }
   }
 }

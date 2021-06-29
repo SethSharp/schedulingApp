@@ -3,9 +3,7 @@
 <mat-sidenav-container class="example-container">
   <mat-sidenav #sidenav mode="side" class="side-bar">
 
-    <h1> Create a session </h1>
-
-    <app-custom-day-block [createSession]="createSession"></app-custom-day-block>
+    <app-side-menu-content [createSesh]="insertData" [days]="days"></app-side-menu-content>
 
   </mat-sidenav>
 
@@ -37,9 +35,10 @@
           <app-day-table
             [getAmount]="getAmount"
             [getHeight]="getHeight"
-            [day]="testMonday"
+            [day]="d.sessions"
             [viewSession]="viewEditSession"
             [insertSession]="insertSession"
+            [title]="d.d"
           >
           </app-day-table>
         </div>
@@ -49,6 +48,6 @@
 
 
   </mat-sidenav-content>
-  <p><button mat-button (click)="sidenav.toggle()">+</button></p>
+  <p><button mat-button (click)="sidenav.toggle()"> </button></p>
 
 </mat-sidenav-container>
