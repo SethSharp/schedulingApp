@@ -1,10 +1,10 @@
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
-
 import { Component, OnInit } from '@angular/core';
 import { Session } from './session';
 import { MatDialog} from '@angular/material/dialog'
 import { ViewSessionComponent } from './view-session/view-session.component';
 import { GeneralFunctionsService } from './Services/general-functions.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +21,8 @@ export class AppComponent implements OnInit {
   sat: Session[] = [];
   sun: Session[] = [];
 
+  tempSession = new Session('', 0, 0);
+
   days = [
     { d: 'Monday', sessions: this.mon },
     { d: 'Tuesday', sessions: this.tue },
@@ -36,22 +38,6 @@ export class AppComponent implements OnInit {
   startTime = 8;
   endTime = 23;
   breakTime = 15;
-
-  constructor(
-    public dialog: MatDialog,
-    private gService: GeneralFunctionsService
-  ) {}
-
-  ngOnInit(): void {
-    // Temporarily adding sessions here, until modal is created
-    this.initialiseTable();
-  }
-
-  initialiseTable() {
-    for (let i = 0; i < this.days.length; i++) {
-      this.addBlankSessions(this.days[i].sessions);
-    }
-  }
 
   times = [
     '8:00',
@@ -70,6 +56,7 @@ export class AppComponent implements OnInit {
     '9:00',
     '10:00',
   ];
+
   headerContent = [
     { t: 'TIME', s: 1 },
     { t: 'MON', s: 2 },
@@ -80,6 +67,27 @@ export class AppComponent implements OnInit {
     { t: 'SAT', s: 2 },
     { t: 'SUN', s: 2 },
   ];
+
+  constructor(
+    public dialog: MatDialog,
+    private gService: GeneralFunctionsService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.mon.push(new Session('Test 1', 8.5, 100, 'Work'));
+    this.initialiseTable();
+  }
+
+  test() {
+    this.router.navigate(['/assessment']);
+  }
+
+  initialiseTable() {
+    for (let i = 0; i < this.days.length; i++) {
+      this.addBlankSessions(this.days[i].sessions);
+    }
+  }
 
   timeToPx(s: number) {
     return (s - 8) * this.rowHeight;
@@ -100,75 +108,82 @@ export class AppComponent implements OnInit {
     return s.toString();
   };
 
-  testSession = {
-    t: '',
-    s: 0,
-    l: 0,
-    i: 0,
-    day: '',
-  };
-
   // When the user clicks on a blank session. It will create a new one inserting at...
-  insertSession = (i: number, days: any, title:string) => {
+  setUpDialog = (i: number, days: any, title: string) => {
     let startTime = new Date();
+    let endTime = new Date();
+
     let s = days[i].start;
     startTime.setHours(s);
     startTime.setMinutes(0);
     startTime.setSeconds(0);
     let x = this.gService.isInt(s);
-    console.group(s);
     if (!x) {
-      console.log('HERE');
       startTime.setMinutes(this.gService.convertDecimalPxToTime(s));
     }
-    let endTime = new Date();
+
     let y = this.gService.getUMinHour(days, i);
     endTime.setHours(startTime.getHours() + y.getHours());
-    console.log(y.getMinutes());
     let minutes = y.getMinutes() + startTime.getMinutes();
-    if (minutes == 60) {
-      endTime.setMinutes(59);
-    } else {
-      endTime.setMinutes(minutes);
-    }
-    this.openSessionDialog(days, title, i, startTime, endTime);
+    endTime.setMinutes(minutes);
+
+    this.openSessionDialog(days, title, startTime, endTime, days, i);
   };
 
-  openSessionDialog(
-    days: any = 0,
+  openSessionDialog = (
+    days: any,
     day: string,
-    i: number = 0,
-    start = new Date(),
-    end = new Date()
-  ) {
+    start: Date,
+    end: Date,
+    session: any,
+    i: number
+  ) => {
     const dialogRef = this.dialog.open(SessionDialogComponent, {
       height: '500px',
       width: '400px',
-      data: { sessions: days, day: day, startTime: start, endTime: end },
+      data: {
+        sessions: days,
+        dayTitle: day,
+        startTime: start,
+        endTime: end,
+        session: session[i],
+      },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      // this.testSession = result;
+      this.tempSession = result;
       try {
-        let newS = new Session(result.t, result.s, result.l, result.c);
-        if (this.testSession != null) this.insertData(i, days, newS);
+        if (result) this.insertData(i, days, result);
       } catch {
         return;
       }
     });
-  }
+  };
+
+  viewEditSession = (day: any, i: number) => {
+    // View a session/edit the session details; time, title, notes?...
+    const dialogRef = this.dialog.open(ViewSessionComponent, {
+      height: '190px',
+      width: '300px',
+      data: { day: day, i: i, blanks: this.addBlankSessions },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result == undefined) return;
+      if (result.t == 'd') {
+        this.replaceSessionWithBlank(result.day, result.i);
+      }
+    });
+  };
 
   insertData = (i: number, days: any, newData: Session) => {
     days[i].len = this.timeToPx(newData.start) - this.timeToPx(days[i].start);
-
     days.splice(i + 1, 0, newData);
-
     // Adding in the new session, into the correct spot. After the break
     let start = this.getEndTime(newData);
     if (newData.start == days[i].start) {
       // Removes blank session
       days.splice(i, 1);
       try {
-        this.insertStartSesh(newData, days, i, start);
+        this.insertStartSesh(days, i, start);
       } catch {
         this.insertEndSessionMatch(days, start);
       }
@@ -180,7 +195,6 @@ export class AppComponent implements OnInit {
         this.insertEndSession(days, start);
       }
     }
-    console.log(days);
   };
 
   insertMiddleSesh(days: any, i: number) {
@@ -193,43 +207,45 @@ export class AppComponent implements OnInit {
     days.splice(i + 2, 0, newBlank);
   }
 
-  insertStartSesh(newData: any, days: any, i: number, start: number) {
+  insertStartSesh(days: any, i: number, start: number) {
     if (days[i + 1].start == start) return;
-    let newBlank = new Session(
-      '',
-      start,
-      this.timeToPx(days[i + 1].start) - this.timeToPx(start)
-    );
+    let len = this.timeToPx(days[i + 1].start) - this.timeToPx(start);
+    let newBlank = new Session('', start, len);
     days.splice(i + 1, 0, newBlank);
   }
 
   insertEndSession(days: any, start: number) {
     // Blank New Sesh (new blank or nothing)
-    let end = this.height - this.timeToPx(start);
     if (start >= this.endTime) return;
-    let newBlank = new Session('', start, end);
+    let len = this.height - this.timeToPx(start);
+    let newBlank = new Session('', start, len);
     days.push(newBlank);
   }
 
   insertEndSessionMatch(days: any, start: number) {
-    let end = this.height - this.timeToPx(start);
-    let newBlank = new Session('', start, end);
     if (start >= this.endTime) return;
+    let len = this.height - this.timeToPx(start);
+    let newBlank = new Session('', start, len);
     days.push(newBlank);
   }
 
-  viewEditSession = (day: any) => {
-    // View a session/edit the session details; time, title, notes?...
-    this.dialog.open(ViewSessionComponent, {
-      height: '150px',
-      width: '300px',
-      data: { session: day },
-    });
-  };
+  replaceSessionWithBlank(day: any, i: number) {
+    try {
+      if (day[i].title == '') {
+        day.splice(i, 1);
+      }
+    } catch {}
+    try {
+      if (day[i - 1].title == '') {
+        day.splice(i - 1, 1);
+      }
+    } catch {}
+    this.addBlankSessions(day);
+  }
 
   // When creating a session, a blank session will fille the gaps where there are none
   // Just so its easy for the user to click on a blank session to insert a new one a that time
-  addBlankSessions(day: any) {
+  addBlankSessions = (day: any) => {
     let blanks: Session[] = [];
     if (day.length == 0) {
       day.push(new Session('', 8, 1500));
@@ -250,6 +266,7 @@ export class AppComponent implements OnInit {
       } else {
         if (day[i].start - day[i - 1].start > 0) {
           let s = day[i - 1].start + day[i - 1].len / this.rowHeight;
+          if (s >= this.endTime) continue;
           let a = this.timeToPx(day[i].start);
           let b = this.timeToPx(s);
           let data = new Session('', s, a - b);
@@ -260,9 +277,11 @@ export class AppComponent implements OnInit {
     let i = day.length - 1;
     let s = day[i].start + day[i].len / this.rowHeight;
     let data = new Session('', s, this.height - this.timeToPx(s));
-    blanks.push(data);
+    if (s < this.endTime) {
+      blanks.push(data);
+    }
     this.insertBlanks(day, blanks);
-  }
+  };
 
   getEndTime(day: any) {
     return day.start + day.len / this.rowHeight;
@@ -278,11 +297,5 @@ export class AppComponent implements OnInit {
       }
       if (blanks[i].start > day[day.length - 1].start) day.push(blanks[i]);
     }
-  }
-
-  getTimeLength(i: number, day: any) {
-    let x = this.timeToPx(day[i].start);
-    let y = this.timeToPx(day[i + 1].start);
-    return y - x;
   }
 }

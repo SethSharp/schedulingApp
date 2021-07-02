@@ -12,35 +12,39 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./session-dialog.component.scss'],
 })
 export class SessionDialogComponent implements OnInit {
-  title = '';
   warning = '';
-  break = 0;
-  originalStart = 0;
-  color = '#2b00ff';
+  title=''
+  color = 'green';
   startTime: Date = new Date();
   endTime: Date = new Date();
   min: Date = new Date();
   max: Date = new Date();
+  endMin = new Date(); //Used to limit the end time to after the end time of the first time contstraint (Start time)
+  categories = this.gService.categories
+
+  selectedCat = 'Select a category';
 
   constructor(
     private dialogRef: MatDialogRef<SessionDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       sessions: any;
-      day: string;
+      dayTitle: string;
       startTime: Date;
       endTime: Date;
+      session: any;
     },
     private gService: GeneralFunctionsService
   ) {
+
+    this.startTime = this.data.startTime
+    this.endTime = this.data.endTime
     this.min = this.data.startTime;
-    this.startTime = this.gService.setTime(
-      this.min.getHours(),
-      this.min.getMinutes()
-    );
-    this.max = this.data.endTime;
-    this.endTime = this.startTime;
-    this.originalStart = this.startTime.getMinutes();
+    this.max = this.data.endTime
+    this.endMin = this.data.startTime
+    this.selectedCat = this.data.session.category
+    this.title = this.data.session.title
+    this.color = this.data.session.colour
   }
 
   ngOnInit(): void {}
@@ -59,28 +63,34 @@ export class SessionDialogComponent implements OnInit {
       this.title,
       this.startTime,
       this.endTime,
+      this.selectedCat,
       this.color
     );
     this.dialogRef.close(obj);
   }
 
-  changeBreak() {
-    this.startTime.setMinutes(this.originalStart + this.break);
+  changeMin() {
+    this.endMin = this.startTime
   }
 
   checkRanges() {
     this.warning = 'Error: ';
     if (this.startTime == this.endTime) {
-      console.log('EQUAL');
       this.warning += ' Need some length';
       return true;
     }
+    if (this.selectedCat == "Blank") {
+      this.warning += " Enter in a category"
+      return true}
+    if (this.color == 'black') {
+      if (this.selectedCat.length < 6) return false
+      this.warning += " Please add a category"
+      return true
+    }
     if (this.endTime > this.max) {
       if (this.endTime >= this.max) {
-        //this.obj.l - 1;
         return false;
       }
-      console.log('...');
       this.warning += ' Session overlaps';
       return true;
     } else {
@@ -92,4 +102,17 @@ export class SessionDialogComponent implements OnInit {
     }
     return false;
   }
+
+  canSelectColour = true;
+  setCat(c: any) {
+    this.selectedCat = c.key;
+    if (c.key == 'Other') {
+      console.log(this.color)
+      this.canSelectColour = false;}
+    else {
+      this.canSelectColour = true
+      this.color = c.value
+    }
+  }
+
 }

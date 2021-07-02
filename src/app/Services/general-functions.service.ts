@@ -1,3 +1,4 @@
+import { Session } from './../session';
 
 import { Injectable } from '@angular/core';
 
@@ -8,6 +9,7 @@ export class GeneralFunctionsService {
   constructor() {}
 
   rowHeight = 100;
+  categories = new Session('', 0, 0).getCats();
 
   isInt(n: number) {
     return n % 1 == 0;
@@ -51,11 +53,7 @@ export class GeneralFunctionsService {
   }
 
   convertMinToPx(n: number) {
-    console.log(n)
-    let x = 100 / (60 / n);
-
-    console.log(x)
-    return x;
+    return 100 / (60 / n);
   }
 
   convertHourToPx(n: number) {
@@ -83,17 +81,34 @@ export class GeneralFunctionsService {
     return s + x / 100;
   }
 
-  createNewSessionObject(title: string, startTime: Date, endTime: Date, colour:string="red") {
-    let obj = { t: '', s: 0, l: 0, c:'' };
-    obj.t = title;
-    obj.c = colour
-    obj.s = this.getHourTimeToPx(startTime);
-    if (startTime.getHours() == endTime.getHours()) {
-      obj.l = this.convertMinToPx(endTime.getMinutes());
-      return obj;
-    }
+  getHourDecimalToMinTime(n: number) {
+    console.log(n)
+    if (Math.floor(n) == n) return 0;
+    let s = n % Math.floor(n);
+    return Math.floor((60 / (100 / s)) * 100);
+  }
+
+  getMinDecimalToMinTime(n: number) {
+    return Math.floor(60 / (100 / n));
+  }
+
+  decTimeToTime(n:number) {
+    return (100 / (60/n)) / 100
+  }
+
+  createNewSessionObject(
+    title: string,
+    startTime: Date,
+    endTime: Date,
+    category: string,
+    colour: string = 'red'
+  ) {
+    let s = this.getHourTimeToPx(startTime);
     // Getting the total length by endtime-starttime
-    obj.l = this.getTotalLengthInPx(startTime, endTime);
-    return obj;
+    let l = this.getTotalLengthInPx(startTime, endTime);
+    if (startTime.getHours() == endTime.getHours()) {
+      l = this.convertMinToPx(endTime.getMinutes());
+    }
+    return new Session(title, s, l, category, colour);
   }
 }

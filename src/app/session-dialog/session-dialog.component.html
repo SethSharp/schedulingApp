@@ -1,9 +1,18 @@
 <div class="c">
-  <h2 mat-dialog-title>Enter in session details for {{ data.day }}</h2>
+  <h2 mat-dialog-title>Enter in session details for {{ data.dayTitle }}</h2>
 
   <mat-form-field float appearance="outline">
     <mat-label> Title </mat-label>
     <input matInput required [(ngModel)]="title" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label> {{selectedCat}}</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let c of categories | keyvalue" (click)="setCat(c)">
+        {{c.key}}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 
   <!-- <mat-form-field float appearance="outline">
@@ -11,7 +20,7 @@
       <input (change)="changeBreak()" matInput type="number" [(ngModel)]="break" >
     </mat-form-field> -->
 
-  <mat-form-field float appearance="outline">
+  <mat-form-field float appearance="outline" >
     <mat-label> Start time </mat-label>
     <input
       matTimepicker
@@ -24,10 +33,6 @@
   </mat-form-field>
 
   <div>
-    <!-- <mat-form-field float appearance="outline">
-      <mat-label> Length (Minutes) </mat-label>
-      <input matInput required type="number" [(ngModel)]="obj.l" >
-    </mat-form-field> -->
     <mat-form-field float appearance="outline">
       <mat-label> End time </mat-label>
       <input
@@ -35,14 +40,21 @@
         placeholder="End time..."
         [(ngModel)]="endTime"
         mode="24h"
-        [minDate]="min"
+        [minDate]="endMin"
         [maxDate]="max"
+        (click)="changeMin()"
       />
     </mat-form-field>
   </div>
 
   <div style="padding-top: 5px; padding-bottom: 5px;">
-    <input [(colorPicker)]="color" [style.background]="color"/>
+
+    <input [style.background]="color"
+        [(colorPicker)]="color"
+        [cpCancelButton]="true"
+        [cpOKButton]="true"
+        [disabled]="canSelectColour"/>
+
   </div>
   <br>
 

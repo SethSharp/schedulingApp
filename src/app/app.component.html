@@ -1,16 +1,15 @@
-<!-- Want to make a component but keep getting error, event is not assigned to type boolean for [(opened)]=...-->
 
 <mat-sidenav-container class="example-container">
+
   <mat-sidenav #sidenav mode="side" class="side-bar">
-
     <app-side-menu-content [createSesh]="insertData" [days]="days"></app-side-menu-content>
-
   </mat-sidenav>
 
   <mat-sidenav-content>
 
     <p>
-      <button mat-button (click)="sidenav.toggle()"> Menu </button>
+      <button mat-button (click)="sidenav.toggle()"> Create a new session </button>
+      <button mat-button (click)="test()"> Exam timetable </button>
     </p>
 
     <mat-grid-list cols="15" rowHeight="50px">
@@ -37,15 +36,14 @@
             [getHeight]="getHeight"
             [day]="d.sessions"
             [viewSession]="viewEditSession"
-            [insertSession]="insertSession"
+            [insertSession]="setUpDialog"
             [title]="d.d"
           >
           </app-day-table>
         </div>
       </mat-grid-tile>
     </mat-grid-list>
-    <br />
-
+    <br/>
 
   </mat-sidenav-content>
   <p><button mat-button (click)="sidenav.toggle()"> </button></p>
