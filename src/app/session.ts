@@ -3,12 +3,20 @@ export class Session {
   private categories = { 'Food': '#00fff3', 'Study': '#09ff00', 'Work': '#ff6c00', 'Other': '#4800ff' }
   constructor(
     public title: string,
-    public start: number,
-    public len: number,
+    public start: Date,
+    public end: Date,
     public category: string = 'Blank',
     public colour: string = 'red'
   ) {
     this.colour = this.getColour()
+  }
+
+  setStart(s: Date) {
+    this.start = s
+  }
+
+  setEnd(e: Date) {
+    this.end = e
   }
 
   setCategory(n: string) {
@@ -33,7 +41,6 @@ export class Session {
         return this.categories["Study"]
       default:
         return this.colour
-        break;
     }
   }
 }

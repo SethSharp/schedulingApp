@@ -19,7 +19,6 @@ export class SessionDialogComponent implements OnInit {
   endTime: Date = new Date();
   min: Date = new Date();
   max: Date = new Date();
-  endMin = new Date(); //Used to limit the end time to after the end time of the first time contstraint (Start time)
   categories = this.gService.categories
 
   selectedCat = 'Select a category';
@@ -30,18 +29,17 @@ export class SessionDialogComponent implements OnInit {
     public data: {
       sessions: any;
       dayTitle: string;
-      startTime: Date;
-      endTime: Date;
       session: any;
+      s: Date;
+      e: Date;
     },
     private gService: GeneralFunctionsService
   ) {
-
-    this.startTime = this.data.startTime
-    this.endTime = this.data.endTime
-    this.min = this.data.startTime;
-    this.max = this.data.endTime
-    this.endMin = this.data.startTime
+    this.startTime = this.data.session.start
+    this.endTime = this.data.session.end
+    // Not working.... but will bed used to check times
+    this.min = this.data.s
+    this.max = this.data.e
     this.selectedCat = this.data.session.category
     this.title = this.data.session.title
     this.color = this.data.session.colour
@@ -59,7 +57,7 @@ export class SessionDialogComponent implements OnInit {
       return;
     }
     if (this.checkRanges()) return;
-    let obj = this.gService.createNewSessionObject(
+    let obj = new Session(
       this.title,
       this.startTime,
       this.endTime,
@@ -67,10 +65,6 @@ export class SessionDialogComponent implements OnInit {
       this.color
     );
     this.dialogRef.close(obj);
-  }
-
-  changeMin() {
-    this.endMin = this.startTime
   }
 
   checkRanges() {
@@ -95,8 +89,7 @@ export class SessionDialogComponent implements OnInit {
       return true;
     } else {
       if (this.endTime < this.startTime) {
-        let x = this.gService.getTimeString(this.startTime);
-        this.warning += ' Enter a time greater then: ' + x;
+        this.warning += ' Enter a time greater then: ' + this.startTime.toLocaleTimeString();
         return true;
       }
     }
@@ -107,7 +100,6 @@ export class SessionDialogComponent implements OnInit {
   setCat(c: any) {
     this.selectedCat = c.key;
     if (c.key == 'Other') {
-      console.log(this.color)
       this.canSelectColour = false;}
     else {
       this.canSelectColour = true

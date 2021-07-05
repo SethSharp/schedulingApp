@@ -1,5 +1,5 @@
 <div *ngFor="let ses of day; let i = index"
-  [style.height.px]="getHeight(ses.len)"
+  [style.height.px]="getHeight(ses)"
   [style.background-color]="getColour(ses)"
   [style.margin-top.px]="getAmount(ses.start, i, day)"
   (click)="getFunction(ses.title, i, day)"

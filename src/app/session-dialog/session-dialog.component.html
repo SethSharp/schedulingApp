@@ -15,11 +15,6 @@
     </mat-select>
   </mat-form-field>
 
-  <!-- <mat-form-field float appearance="outline">
-    <mat-label> Add a break? </mat-label>
-      <input (change)="changeBreak()" matInput type="number" [(ngModel)]="break" >
-    </mat-form-field> -->
-
   <mat-form-field float appearance="outline" >
     <mat-label> Start time </mat-label>
     <input
@@ -40,9 +35,8 @@
         placeholder="End time..."
         [(ngModel)]="endTime"
         mode="24h"
-        [minDate]="endMin"
-        [maxDate]="max"
-        (click)="changeMin()"
+        [minDate]="min"
+      [maxDate]="max"
       />
     </mat-form-field>
   </div>

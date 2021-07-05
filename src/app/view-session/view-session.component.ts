@@ -6,6 +6,7 @@ import { Inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionDialogComponent } from '../session-dialog/session-dialog.component';
+import { Session } from '../session'
 @Component({
   selector: 'app-view-session',
   templateUrl: './view-session.component.html',
@@ -16,6 +17,10 @@ export class ViewSessionComponent implements OnInit {
   y = '';
   pos = 0;
   session: any;
+  height = new Date
+  startTime = new Date
+  ogStart = new Date
+  ogEnd = new Date
 
   constructor(
     public dialog: MatDialog,
@@ -26,126 +31,112 @@ export class ViewSessionComponent implements OnInit {
       i: any;
       blanks: any;
     },
-    private gService: GeneralFunctionsService
   ) {
     this.pos = this.data.i;
     this.session = this.data.day[this.pos];
-    this.getEndTime(this.session);
+    this.x = this.session.start.toLocaleTimeString();
+    this.y = this.session.end.toLocaleTimeString();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.height.setHours(23);
+    this.height.setMinutes(0);
+    this.height.setSeconds(0);
 
+    this.startTime.setHours(8);
+    this.startTime.setMinutes(0);
+    this.startTime.setSeconds(0);
+  }
 
   deleteSession() {
-    this.data.day.splice(this.pos, 1);
     this.dialogRef.close({ t: 'd', day: this.data.day, i: this.pos });
   }
 
-  getEndTime(session: any) {
-    let start = new Date();
-    let end = new Date();
-    start.setHours(session.start);
-    let sMinutes = this.gService.convertDecimalPxToTime(session.start);
-    start.setMinutes(sMinutes);
-    start.setSeconds(0);
-
-    let tMinutes = this.gService.convertPxToTime(session.len);
-    end.setHours(start.getHours());
-    end.setMinutes(tMinutes + start.getMinutes());
-    end.setSeconds(0);
-
-    this.x = start.toLocaleTimeString();
-    this.x = this.x.substring(0, 4) + this.x.substring(7, this.x.length);
-    this.y = end.toLocaleTimeString();
-    this.y = this.y.substring(0, 4) + this.y.substring(7, this.y.length);
-  }
-
   editSession() {
-    let startTime = new Date();
-    let endTime = new Date();
     let day = this.data.day;
     let i = this.pos;
 
-    startTime.setSeconds(0);
-    endTime.setSeconds(0);
+    let startTime = day[i].start;
+    let endTime = day[i].end;
 
-    // Setting the start time
     try {
       if (day[i - 1].title == '') {
-        // Prev session => blank
-        startTime.setHours(day[i - 1].start);
-        startTime.setMinutes(
-          this.gService.getHourDecimalToMinTime(day[i - 1].start)
-        );
-      } else {
-        // Prev session !=> blank, so start is the current time
-        startTime.setHours(day[i].start);
-        startTime.setMinutes(
-          this.gService.getHourDecimalToMinTime(day[i].start)
-        );
+        startTime = day[i - 1].start;
+        console.log('EHH');
       }
-    } catch {
-      startTime.setHours(8);
-      startTime.setMinutes(0);
-    }
+    } catch {} // start time already set to the beginning of the session
 
-    // Setting the end time
     try {
       if (day[i + 1].title == '') {
-        endTime.setHours(day[i + 1].start);
-        endTime.setMinutes(
-          this.gService.getHourDecimalToMinTime(day[i + 1].start)
-        );
-        let x = this.gService.getMinDecimalToMinTime(day[i + 1].len);
-        if (x > 59) {
-          let n = Math.floor(x / 60);
-          let m = x % 60;
-          endTime.setHours(endTime.getHours() + n);
-          endTime.setMinutes(m + endTime.getMinutes());
-        } else {
-          endTime.setMinutes(x + endTime.getMinutes());
-        }
-      } else {
-        // The next session is another session not a blank, so reuse that code
-        throw 'exception';
+        endTime = day[i + 1].end;
+        console.log('HERE');
       }
-    } catch {
-      endTime.setHours(day[i].start);
-      let x = this.gService.getMinDecimalToMinTime(day[i].len);
-      let y = this.gService.getHourDecimalToMinTime(day[i].start);
-      endTime.setMinutes(y + x);
-    }
+    } catch {} // Same as before, uses endtime default time
+    startTime.setSeconds(0)
+    endTime.setSeconds(0)
+    this.ogStart = startTime
+    this.ogEnd = endTime
+
     this.openSessionDialog(day, this.session, startTime, endTime);
   }
 
-  openSessionDialog = (day: any, session:any, start: Date, end: Date) => {
+  openSessionDialog = (day: any, session: any, start: Date, end: Date) => {
     const dialogRef = this.dialog.open(SessionDialogComponent, {
       height: '500px',
       width: '400px',
       data: {
         sessions: day,
         dayTitle: session.title,
-        startTime: start,
-        endTime: end,
+        s: start,
+        e: end,
         session: session,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      if (result == null) return
-      try { if (result) this.insertSession(this.pos, day, result); }
-      catch { return; }
+      if (result == null) return;
+      try {
+        if (result) this.adjustSessions(this.pos, day, result);
+      } catch {
+        return;
+      }
     });
   };
 
-  insertSession(i:number, day:any, data:any) {
-    console.log('Add');
-    day.splice(i, 1, data);
+  adjustSessions(i: number, day: any, newData: any) {
     try {
-      if (day[i + 1].title == '') day.splice(i + 1, 1);
-      if (day[i - 1].title == '') day.splice(i - 1, 1);
-    } catch {
-      console.log('End session at the end of day...');
+      if (day[i+1].title == '') {
+        day[i+1].start = newData.end
+      }
+    } catch {}
+    try {
+      if (day[i-1].title == '') {
+        day[i-1].end = newData.start
+      }
+    } catch {}
+
+    day.splice(i,1,newData)
+
+    if (newData.start != this.ogStart) {
+      try {
+        if (day[i+1].title == '') {
+          day[i+1].setStart(newData.end)
+        }
+      } catch { // end of the day
+        let sesh = new Session('',newData.end, this.height)
+        day.push(sesh)
+      }
     }
-    this.data.blanks(day)
+
+    if (this.ogEnd != newData.end) {
+      try {
+      if (day[i-1].title == '') {
+        day[i-1].setEnd(newData.start)
+      }
+      } catch {
+        let sesh = new Session('',this.startTime,newData.end)
+        day.splice(0,1,sesh)
+      }
+    }
+    this.dialogRef.close()
   }
 }

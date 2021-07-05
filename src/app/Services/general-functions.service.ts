@@ -9,7 +9,7 @@ export class GeneralFunctionsService {
   constructor() {}
 
   rowHeight = 100;
-  categories = new Session('', 0, 0).getCats();
+  categories = new Session('', new Date, new Date).getCats();
 
   isInt(n: number) {
     return n % 1 == 0;
@@ -103,12 +103,12 @@ export class GeneralFunctionsService {
     category: string,
     colour: string = 'red'
   ) {
-    let s = this.getHourTimeToPx(startTime);
+    let s = startTime
     // Getting the total length by endtime-starttime
-    let l = this.getTotalLengthInPx(startTime, endTime);
+    let l = endTime.getTime()-startTime.getTime()
     if (startTime.getHours() == endTime.getHours()) {
-      l = this.convertMinToPx(endTime.getMinutes());
+      l = endTime.getMinutes();
     }
-    return new Session(title, s, l, category, colour);
+    return new Session(title, s, new Date(l), category, colour);
   }
 }

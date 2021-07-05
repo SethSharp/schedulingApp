@@ -58,18 +58,10 @@ export class SideMenuContentComponent implements OnInit {
     for (let i = 0; i < sessions.length; i++) {
       if (sessions[i].title != '') continue;
       // From this point working in a blank slot
-      let x = start.getHours() + this.gServ.decTimeToTime(start.getMinutes());
-
-      if (sessions[i].start <= x) {
-        console.log(x);
-        let sesEnd = new Date();
-        sesEnd.setHours(sessions[i].start);
-        sesEnd.setMinutes(
-          this.gServ.convertPxToTime(sessions[i].len) +
-            this.gServ.getHourDecimalToMinTime(sessions[i].start)
-        );
-        console.log(sesEnd)
-        if (sesEnd < endTime) {
+      if (sessions[i].start.getTime <= start.getTime) {
+        let sesEnd = sessions[i].start
+        if (sesEnd >= endTime) {
+          console.log(endTime)
           w = 'Too long';
         } else {
           this.addSession(i, sessions);
@@ -77,7 +69,6 @@ export class SideMenuContentComponent implements OnInit {
         }
       } else {
         w = 'Session overlap/alreay exists';
-        continue;
       }
     }
     return w;
@@ -89,7 +80,7 @@ export class SideMenuContentComponent implements OnInit {
   }
 
   addSession(i: number, session: any) {
-    let obj = this.gServ.createNewSessionObject(
+    let obj = new Session(
       this.title,
       this.startTime,
       this.endTime,
