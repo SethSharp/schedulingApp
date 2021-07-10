@@ -1,10 +1,13 @@
 
 <div style="text-align: center;">
-  <h1> Hello welcome enter your table to view</h1>
+  <h1> Time table selection and creation</h1>
 
-  <input mat-input [(ngModel)]="table" placeholder="Enter something bitch">
+  <mat-form-field float appearance="outline">
+    <mat-label> Table name </mat-label>
+    <input matInput type="text" placeholder="Name" [(ngModel)]="table" />
+  </mat-form-field>
 
-  <button (click)="submitTable()"> Submit ya dog </button>
+  <button mat-button (click)="submitTable()"> Submit  </button>
 
   <br><br>
 
@@ -15,7 +18,7 @@
           {{table}}
         </mat-panel-title>
         <mat-panel-description>
-          Select/Edit/Delete
+          Select/Delete
         </mat-panel-description>
       </mat-expansion-panel-header>
 

@@ -14,9 +14,6 @@ import { MaterialModule } from './material.module';
 import { MatTimepickerModule } from 'mat-timepicker';
 
 
-let routes: Routes = [
- // {path: "add", component: AddComponent}
-]
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -26,8 +23,7 @@ let routes: Routes = [
     ComponentModule,
     MaterialModule,
     MatTimepickerModule,
-    HttpClientModule,
-    RouterModule.forRoot(routes)
+    HttpClientModule
   ],
   providers: [],
   entryComponents: [],
