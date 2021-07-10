@@ -17,14 +17,15 @@
 
   <mat-form-field float appearance="outline" >
     <mat-label> Start time </mat-label>
-    <input
-      matTimepicker
-      placeholder="Start time"
-      [(ngModel)]="startTime"
-      mode="24h"
-      [minDate]="min"
-      [maxDate]="max"
-    />
+      <input
+        matTimepicker
+        placeholder="Start time"
+        [(ngModel)]="startTime"
+        mode="24h"
+        [minDate]="min"
+        [maxDate]="nMax"
+        (click)="changeMax()"
+      />
   </mat-form-field>
 
   <div>
@@ -35,8 +36,9 @@
         placeholder="End time..."
         [(ngModel)]="endTime"
         mode="24h"
-        [minDate]="min"
-      [maxDate]="max"
+        [minDate]="nMin"
+        [maxDate]="max"
+        (click)="changeMin()"
       />
     </mat-form-field>
   </div>
@@ -51,8 +53,6 @@
 
   </div>
   <br>
-
-  <mat-label style="color: red"> {{ warning }}</mat-label>
 
   <div style="background-color: lightgoldenrodyellow; text-align: center">
     <mat-dialog-actions>

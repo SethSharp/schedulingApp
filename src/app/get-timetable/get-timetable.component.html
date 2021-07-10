@@ -1,0 +1,45 @@
+
+<div style="text-align: center;">
+  <h1> Hello welcome enter your table to view</h1>
+
+  <input mat-input [(ngModel)]="table" placeholder="Enter something bitch">
+
+  <button (click)="submitTable()"> Submit ya dog </button>
+
+  <br><br>
+
+  <mat-accordion  *ngFor="let table of tables; let i = index" multi=false style="text-align: left;">
+    <mat-expansion-panel >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{table}}
+        </mat-panel-title>
+        <mat-panel-description>
+          Select/Edit/Delete
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <span>
+<button mat-button matTooltip="Open table"
+              matTooltipPosition="left"
+              color="primary"
+              (click)="submitTable(table)"
+              > Select </button>
+
+
+
+      <button mat-button matTooltip="Delete table (FOREVER)"
+              matTooltipPosition="right"
+              style="text-align: right;"
+              (click)="deleteTable(table, i)"
+              color="warn"> Delete </button>
+
+      </span>
+
+
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</div>
+

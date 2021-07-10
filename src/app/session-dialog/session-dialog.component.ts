@@ -1,3 +1,4 @@
+import { SessionService } from './../session.service';
 import { Session } from './../session';
 import { GeneralFunctionsService } from './../Services/general-functions.service';
 
@@ -5,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatGridTileHeaderCssMatStyler } from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-session-dialog',
@@ -13,13 +15,15 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class SessionDialogComponent implements OnInit {
   warning = '';
-  title=''
+  title = '';
   color = 'green';
   startTime: Date = new Date();
   endTime: Date = new Date();
   min: Date = new Date();
   max: Date = new Date();
-  categories = this.gService.categories
+  nMin: Date = new Date();
+  nMax: Date = new Date();
+  categories = this.gService.categories;
 
   selectedCat = 'Select a category';
 
@@ -32,17 +36,19 @@ export class SessionDialogComponent implements OnInit {
       session: any;
       s: Date;
       e: Date;
+      table: string;
     },
     private gService: GeneralFunctionsService
   ) {
-    this.startTime = this.data.session.start
-    this.endTime = this.data.session.end
-    // Not working.... but will bed used to check times
-    this.min = this.data.s
-    this.max = this.data.e
-    this.selectedCat = this.data.session.category
-    this.title = this.data.session.title
-    this.color = this.data.session.colour
+    this.startTime = this.data.session.start;
+    this.endTime = this.data.session.end;
+    this.min = this.data.s;
+    this.max = this.data.e;
+    this.nMin = this.data.s;
+    this.nMax = this.data.e;
+    this.selectedCat = this.data.session.category;
+    this.title = this.data.session.title;
+    this.color = this.data.session.colour;
   }
 
   ngOnInit(): void {}
@@ -52,11 +58,10 @@ export class SessionDialogComponent implements OnInit {
   }
 
   submitSessionBlock() {
-    if (this.title == '') {
-      this.warning = 'Error: Enter in a title';
-      return;
-    }
-    if (this.checkRanges()) return;
+    if (this.checkRanges()) {
+      this.gService.openSnack(this.warning);
+      return
+    };
     let obj = new Session(
       this.title,
       this.startTime,
@@ -69,42 +74,42 @@ export class SessionDialogComponent implements OnInit {
 
   checkRanges() {
     this.warning = 'Error: ';
+    if (this.title == '') {
+      this.warning += ' Enter in a title';
+      return true;
+    }
     if (this.startTime == this.endTime) {
       this.warning += ' Need some length';
       return true;
     }
-    if (this.selectedCat == "Blank") {
-      this.warning += " Enter in a category"
-      return true}
-    if (this.color == 'black') {
-      if (this.selectedCat.length < 6) return false
-      this.warning += " Please add a category"
-      return true
-    }
-    if (this.endTime > this.max) {
-      if (this.endTime >= this.max) {
-        return false;
-      }
-      this.warning += ' Session overlaps';
+    if (this.selectedCat == 'Blank') {
+      this.warning += ' Enter in a category';
       return true;
-    } else {
-      if (this.endTime < this.startTime) {
-        this.warning += ' Enter a time greater then: ' + this.startTime.toLocaleTimeString();
-        return true;
-      }
+    }
+    if (this.color == 'black') {
+      if (this.selectedCat.length < 6) return false;
+      this.warning += ' Please add a category';
+      return true;
     }
     return false;
+  }
+
+  changeMin() {
+    this.nMin = this.startTime;
+  }
+
+  changeMax() {
+    this.nMax = this.endTime;
   }
 
   canSelectColour = true;
   setCat(c: any) {
     this.selectedCat = c.key;
     if (c.key == 'Other') {
-      this.canSelectColour = false;}
-    else {
-      this.canSelectColour = true
-      this.color = c.value
+      this.canSelectColour = false;
+    } else {
+      this.canSelectColour = true;
+      this.color = c.value;
     }
   }
-
 }

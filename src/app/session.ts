@@ -1,10 +1,8 @@
-
 export class Session {
-  private categories = { 'Food': '#00fff3', 'Study': '#09ff00', 'Work': '#ff6c00', 'Other': '#4800ff' }
   constructor(
-    public title: string,
-    public start: Date,
-    public end: Date,
+    public title: string = '',
+    public start: Date = new Date,
+    public end: Date = new Date,
     public category: string = 'Blank',
     public colour: string = 'red'
   ) {
@@ -27,18 +25,20 @@ export class Session {
     return this.category;
   }
 
-  getCats() {
-    return this.categories
-  }
-
   getColour() {
+    let categories = {
+      Food: '#00fff3',
+      Study: '#09ff00',
+      Work: '#ff6c00',
+      Other: '#4800ff',
+    };
     switch (this.category) {
       case "Work":
-        return this.categories["Work"]
+        return categories["Work"]
       case "Food":
-        return this.categories["Food"]
+        return categories["Food"]
       case "Study":
-        return this.categories["Study"]
+        return categories["Study"]
       default:
         return this.colour
     }

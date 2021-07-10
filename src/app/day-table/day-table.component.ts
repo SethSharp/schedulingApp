@@ -13,24 +13,27 @@ export class DayTableComponent implements OnInit {
   @Input() viewSession: any;
   @Input() insertSession: any;
   @Input() title: any;
+  @Input() dayPos: any;
+
+  days = [
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+  ]
 
   constructor() {}
 
   ngOnInit(): void {}
 
   getFunction(title: string, i: number, day: any) {
+    let x = this.days[this.dayPos];
     if (title=='') {
-      return this.insertSession(i, day, this.title);
+      return this.insertSession(day, this.title, i);
     }
-    return this.viewSession(day, i);
+    return this.viewSession(day, i, x);
   }
 
   getColour(s:any) {
     if (s.category == "Blank") return "lightgrey"
-    return s.getColour();
+    return s.colour;
   }
 
-  getPos(s: number) {
-    return (s - 8)*100;
-  }
 }

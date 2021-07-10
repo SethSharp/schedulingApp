@@ -7,6 +7,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionDialogComponent } from '../session-dialog/session-dialog.component';
 import { Session } from '../session'
+import { splitClasses } from '@angular/compiler';
 @Component({
   selector: 'app-view-session',
   templateUrl: './view-session.component.html',
@@ -58,24 +59,25 @@ export class ViewSessionComponent implements OnInit {
 
     let startTime = day[i].start;
     let endTime = day[i].end;
-
+    this.ogStart = startTime
+    this.ogEnd = endTime
     try {
       if (day[i - 1].title == '') {
         startTime = day[i - 1].start;
-        console.log('EHH');
+
       }
     } catch {} // start time already set to the beginning of the session
 
     try {
       if (day[i + 1].title == '') {
         endTime = day[i + 1].end;
-        console.log('HERE');
+
       }
-    } catch {} // Same as before, uses endtime default time
+    } catch {} // Same as before, uses end time default time
     startTime.setSeconds(0)
     endTime.setSeconds(0)
-    this.ogStart = startTime
-    this.ogEnd = endTime
+
+
 
     this.openSessionDialog(day, this.session, startTime, endTime);
   }
@@ -95,7 +97,8 @@ export class ViewSessionComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result == null) return;
       try {
-        if (result) this.adjustSessions(this.pos, day, result);
+        if (result) {
+          this.adjustSessions(this.pos, day, result);}
       } catch {
         return;
       }
@@ -103,40 +106,61 @@ export class ViewSessionComponent implements OnInit {
   };
 
   adjustSessions(i: number, day: any, newData: any) {
-    try {
-      if (day[i+1].title == '') {
-        day[i+1].start = newData.end
-      }
-    } catch {}
-    try {
-      if (day[i-1].title == '') {
-        day[i-1].end = newData.start
-      }
-    } catch {}
-
-    day.splice(i,1,newData)
-
-    if (newData.start != this.ogStart) {
+    day[i] = newData
+    if (newData.end != this.ogEnd) {
       try {
-        if (day[i+1].title == '') {
-          day[i+1].setStart(newData.end)
+        let d = day[i+1]  // There is a session after the edited one
+        // So its start needs to be reset
+        if (d.title == '') {
+          d.setStart(newData.end)
+          if (newData.end.getHours() == this.height.getHours()) {
+            if (newData.end.getMinutes() == this.height.getMinutes()){
+              day.pop()
+            }
+          }
+        } else {
+          if (newData.end < this.height) {
+            if (d.start < this.height) {
+              day.splice(i,0, new Session('', newData.end, d.start))
+            }
+          }
         }
-      } catch { // end of the day
-        let sesh = new Session('',newData.end, this.height)
-        day.push(sesh)
+        console.log('1')
+      } catch { // This case means that the next session doesn't exist, so the end
+        if (newData.end < this.height) { // Then there can be an end session
+          day.push(new Session('', newData.end, this.height))
+        }
+        console.log('2');
       }
     }
 
-    if (this.ogEnd != newData.end) {
+    if (this.ogStart != newData.start) {
+      console.log(this.ogStart, newData.start)
       try {
-      if (day[i-1].title == '') {
-        day[i-1].setEnd(newData.start)
-      }
+        let d = day[i-1] // There is a session prior to the edited one
+        if (d.title == '') {
+          if (newData.start == this.height) {
+            day.splice(0,1)
+            console.log("equal")
+          } else {
+            d.setEnd(newData.start)
+          }
+
+        } else {
+          day.splice(i,0, new Session('',d.end, newData.start))
+        }
+
+        console.log('3');
       } catch {
-        let sesh = new Session('',this.startTime,newData.end)
-        day.splice(0,1,sesh)
+        if (newData.start > this.startTime) {
+            day.splice(0,0, new Session('', this.startTime, newData.start))
+        } else {
+          day.splice(0,1)
+        }
+        console.log('4');
       }
     }
-    this.dialogRef.close()
+
+    this.dialogRef.close({t:'', day: day})
   }
 }

@@ -41,17 +41,9 @@ export class SideMenuContentComponent implements OnInit {
     this.endTime = this.max;
   }
 
-  createSession() {
-    let warning = this.fitIntoDay(this.startTime, this.endTime, this.editDay);
-    if (warning != '') {
-      this.warning = 'Warning: ' + warning;
-    } else {
-      this.warning = '';
-    }
-  }
-
-  // Return true to fit, false it doesn't
-  fitIntoDay(start: Date, endTime: Date, s: any) {
+  createSession(start: Date=this.startTime,
+                endTime: Date = this.endTime,
+                s: any = this.editDay) {
     let w = '';
     if (s.sessions == null) return;
     let sessions = s.sessions;
@@ -61,17 +53,17 @@ export class SideMenuContentComponent implements OnInit {
       if (sessions[i].start.getTime <= start.getTime) {
         let sesEnd = sessions[i].start
         if (sesEnd >= endTime) {
-          console.log(endTime)
           w = 'Too long';
         } else {
           this.addSession(i, sessions);
-          return '';
+          w = 'Success!!';
+          break
         }
       } else {
-        w = 'Session overlap/alreay exists';
+        w = 'Session overlap/already exists';
       }
     }
-    return w;
+    this.gServ.openSnack(w)
   }
 
   setDay(day: any) {
@@ -87,7 +79,7 @@ export class SideMenuContentComponent implements OnInit {
       this.selectedCat,
       this.color
     );
-    this.createSesh(i, session, obj);
+    this.createSesh(i, session, obj, this.selectedDay);
   }
 
   canSelectColour = true;

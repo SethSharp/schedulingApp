@@ -9,7 +9,7 @@
 
     <p>
       <button mat-button (click)="sidenav.toggle()"> Create a new session </button>
-      <button mat-button (click)="test()"> Exam timetable </button>
+      <button mat-button (click)="changeTable()"> Change table </button>
     </p>
 
     <mat-grid-list cols="15" rowHeight="50px">
@@ -36,8 +36,9 @@
             [getHeight]="getHeight"
             [day]="d.sessions"
             [viewSession]="viewEditSession"
-            [insertSession]="setUpDialog"
+            [insertSession]="openSessionDialog"
             [title]="d.d"
+            [dayPos]="j"
           >
           </app-day-table>
         </div>

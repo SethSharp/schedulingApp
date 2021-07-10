@@ -7,18 +7,21 @@ import { SessionDialogComponent } from './session-dialog/session-dialog.componen
 import { SideMenuContentComponent } from './side-menu-content/side-menu-content.component';
 import { ViewSessionComponent } from './view-session/view-session.component';
 import { MaterialModule } from './material.module';
+import { GetTimetableComponent } from './get-timetable/get-timetable.component';
 @NgModule({
   declarations: [
     DayTableComponent,
     SessionDialogComponent,
     ViewSessionComponent,
     SideMenuContentComponent,
+    GetTimetableComponent
   ],
   exports: [
     DayTableComponent,
     SessionDialogComponent,
     ViewSessionComponent,
     SideMenuContentComponent,
+    GetTimetableComponent
   ],
   imports: [CommonModule, FormsModule, MaterialModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

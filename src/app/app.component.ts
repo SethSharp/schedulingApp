@@ -1,43 +1,39 @@
+import { GetTimetableComponent } from './get-timetable/get-timetable.component';
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
 import { Component, OnInit } from '@angular/core';
 import { Session } from './session';
 import { MatDialog} from '@angular/material/dialog'
 import { ViewSessionComponent } from './view-session/view-session.component';
+import { SessionService } from './session.service';
 import { GeneralFunctionsService } from './Services/general-functions.service';
-import { Router } from '@angular/router';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  // Future use some sort of storage and service
-  mon: Session[] = [];
-  tue: Session[] = [];
-  wed: Session[] = [];
-  thu: Session[] = [];
-  fri: Session[] = [];
-  sat: Session[] = [];
-  sun: Session[] = [];
+
+
+  dayTitles = this.gServ.dayTitles;
+  rowHeight = 100;
+  startTime = this.gServ.startTime
+  endTime = this.gServ.endTime
 
   days = [
-    { d: 'Monday', sessions: this.mon },
-    { d: 'Tuesday', sessions: this.tue },
-    { d: 'Wednesday', sessions: this.wed },
-    { d: 'Thursday', sessions: this.thu },
-    { d: 'Friday', sessions: this.fri },
-    { d: 'Saturday', sessions: this.sat },
-    { d: 'Sunday', sessions: this.sun },
+    { d: 'Monday', sessions: [] },
+    { d: 'Tuesday', sessions: [] },
+    { d: 'Wednesday', sessions: [] },
+    { d: 'Thursday', sessions: [] },
+    { d: 'Friday', sessions: [] },
+    { d: 'Saturday', sessions: [] },
+    { d: 'Sunday', sessions: [] },
   ];
 
-  rowHeight = 100;
-  height = new Date();
-  startTime = new Date();
-  endTime = new Date();
-  breakTime = 15;
-
-  tempSession = new Session('', new Date(), new Date());
+  tempSession = new Session('', this.startTime, this.endTime);
+  dbContent: any;
+  defaultT = 'Main';
+  currentTable = '';
+  tables:any;
 
   times = [
     '8:00',
@@ -70,32 +66,73 @@ export class AppComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
-    private router: Router,
+    private sessionServ: SessionService,
+    private gServ: GeneralFunctionsService
   ) {}
 
-  ngOnInit(): void {
-    this.height.setHours(23);
-    this.height.setMinutes(0);
-    this.height.setSeconds(0);
-
-    this.startTime.setHours(8);
-    this.startTime.setMinutes(0);
-    this.startTime.setSeconds(0);
-
-    this.initialiseTable();
-
-    this.tempSession = new Session('', this.startTime, this.height);
-    this.endTime = this.height;
+  async ngOnInit() {
+    this.changeTable()
   }
 
-  test() {
-    this.router.navigate(['/assessment']);
+  changeTable() {
+    this.sessionServ.retrieveAllTables().subscribe((d) => {
+      this.tables = d
+      let defaulted = false
+      let defaultH=250
+      // Height for the text and input + the extra height for other tables
+      let height = defaultH+(this.tables.length*60)
+      if (this.tables.length == 0) {
+        height = defaultH
+      }
+      const dialogRef = this.dialog.open(GetTimetableComponent, {
+        height: height+"px",
+        width: '400px',
+        data: {
+          tables: this.tables
+        }
+      });
+      dialogRef.backdropClick().subscribe(() => {
+        this.currentTable = this.defaultT;
+        defaulted = true
+      });
+      dialogRef.afterClosed().subscribe((t) => {
+        if (defaulted == false) {
+          this.currentTable = t;
+        }
+        this.loadTable(this.currentTable);
+      });
+    });
   }
 
-  initialiseTable() {
-    for (let i = 0; i < this.days.length; i++) {
-      this.addBlankSessions(this.days[i].sessions);
-    }
+  loadTable(t: string) {
+    this.sessionServ.collectionExists(t).subscribe((d) => {
+      if (!d) {
+        this.sessionServ.createTable(t).subscribe((f)=>{
+          this.retrieveTable(t)
+        })
+      } else { this.retrieveTable(t); }
+    });
+    // this.gServ.openSnack('Created new timetable');
+  }
+
+  retrieveTable(t: string) {
+    this.sessionServ.retrieveTable(t).subscribe((d) => {
+      this.dbContent = d;
+      this.initialiseTable(this.dbContent);
+      for (let i = 0; i < this.days.length; i++) {
+        this.adjustRetrievedData(this.days[i].sessions);
+      }
+    });
+  }
+
+  initialiseTable(d: any) {
+    this.days[0].sessions = d.m;
+    this.days[1].sessions = d.t;
+    this.days[2].sessions = d.w;
+    this.days[3].sessions = d.th;
+    this.days[4].sessions = d.f;
+    this.days[5].sessions = d.s;
+    this.days[6].sessions = d.su;
   }
 
   timeToPx(s: number) {
@@ -125,48 +162,30 @@ export class AppComponent implements OnInit {
     return x.toString();
   };
 
-  // When the user clicks on a blank session. It will create a new one inserting at...
-  setUpDialog = (i: number, days: any, title: string) => {
-    this.openSessionDialog(days, title, days, i);
-  };
-
-  openSessionDialog = (days: any, day: string, session: any, i: number) => {
+  // When the user clicks on a blank session. It will create a new one
+  openSessionDialog = (days: any, dayTitle: string, i: number) => {
     const dialogRef = this.dialog.open(SessionDialogComponent, {
       height: '500px',
       width: '400px',
       data: {
         sessions: days,
-        dayTitle: day,
-        session: session[i],
+        dayTitle: dayTitle,
+        session: days[i],
         s: days[i].start,
         e: days[i].end,
+        table: this.currentTable,
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.tempSession = result;
       try {
-        if (result) this.insertData(i, days, result);
+        if (result) this.insertData(i, days, result, dayTitle);
       } catch {}
     });
   };
 
-  viewEditSession = (day: any, i: number) => {
-    // View a session/edit the session details; time, title, notes?...
-    const dialogRef = this.dialog.open(ViewSessionComponent, {
-      height: '190px',
-      width: '300px',
-      data: { day: day, i: i, blanks: this.addBlankSessions },
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result == undefined) return;
-      if (result.t == 'd') {
-        this.replaceSessionWithBlank(result.day, result.i);
-      }
-    });
-  };
-
-  insertData = (i: number, days: any, newData: Session) => {
-    // Chaning the length of the session we are inserting at
+  insertData = (i: number, days: any, newData: Session, t: string = '') => {
+    // Changing the length of the session we are inserting at
     // end time will become the start time of the newData
     days[i].end = newData.start;
     days.splice(i + 1, 0, newData);
@@ -191,6 +210,7 @@ export class AppComponent implements OnInit {
         this.insertEndSession(days, start);
       }
     }
+    this.sessionServ.updateDay(days, t, this.currentTable).subscribe(() => {});
   };
 
   insertMiddleSesh(days: any, i: number) {
@@ -209,89 +229,77 @@ export class AppComponent implements OnInit {
 
   insertEndSession(day: any, start: Date) {
     // Blank New Sesh (new blank or nothing)
-    if (start >= this.height) return;
+    if (start >= this.endTime) return;
     // heightNeeds to have a time value (11PM)
-    let newBlank = new Session('', start, this.height);
+    let newBlank = new Session('', start, this.endTime);
     day.push(newBlank);
   }
 
   insertEndSessionMatch(day: any, start: Date) {
-    if (start >= this.height) return;
-    let newBlank = new Session('', start, this.height);
+    if (start >= this.endTime) return;
+    let newBlank = new Session('', start, this.endTime);
     day.push(newBlank);
   }
+
+  viewEditSession = (day: any, i: number, t: string) => {
+    console.log(day);
+    const dialogRef = this.dialog.open(ViewSessionComponent, {
+      height: '190px',
+      width: '300px',
+      data: { day: day, i: i },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result == null) return;
+      if (result.t == 'd') {
+        this.replaceSessionWithBlank(result.day, result.i);
+      }
+      this.sessionServ
+        .updateDay(result.day, t, this.currentTable)
+        .subscribe(() => {});
+    });
+  };
 
   replaceSessionWithBlank(day: any, i: number) {
     // Defaulted to the day we are deleting, incase there are no surrounding blanks
     let blank = new Session('', day[i].start, day[i].end);
     //Finding the end time
     try {
-      if (day[i+1].title == '') {
-        blank.setEnd(day[i+1].end)
-        day.splice(i+1,1)
+      if (day[i + 1].title == '') {
+        blank.setEnd(day[i + 1].end);
+        day.splice(i + 1, 1);
       }
     } catch {}
 
     // Finding start time
     try {
-      if (day[i-1].title == '') {
+      if (day[i - 1].title == '') {
         blank.setStart(day[i - 1].start);
         day.splice(i - 1, 1);
         // Reduced so day[i] stays at same place
-        i--
+        i--;
       }
-   } catch {}
-    day[i] = blank
+    } catch {}
+    day[i] = blank;
   }
 
-  // When creating a session, a blank session will fille the gaps where there are none
-  // Just so its easy for the user to click on a blank session to insert a new one a that time
-  addBlankSessions = (day: any) => {
-    let blanks: Session[] = [];
-    if (day.length == 0) {
-      day.push(new Session('', this.startTime, this.height));
-      return;
-    }
-    for (let i = 0; i < day.length; i++) {
-      // break time is a const amount of time between each session, since beginning no need...
-      // Beginning of day check
-      if (i == 0) {
-        if (day[i].start.getHours() - this.startTime.getHours() > 0) {
-          if (day[i].start.getMinutes() - this.startTime.getMinutes() > 0) {
-            let data = new Session('', this.startTime, day[i].start);
-            blanks.push(data);
-            day.splice(i,0,data)
-          }
-        }
-      } else {
-        if (day[i].start - day[i - 1].start > 0) {
-          let s = day[i - 1].end;
-          if (s >= this.endTime) continue;
-          let data = new Session('', s, day[i].start);
-          blanks.push(data);
-          day.splice(i,0)
-        }
-      }
-    }
-    let i = day.length - 1;
-    let e = this.height.getTime() - day[i].end.getTime()
-    let data = new Session('', day[i].end, this.height);
-    if (day[i].end < this.endTime) {
-      blanks.push(data);
-      day.push(data)
-    }
-    // this.insertBlanks(day, blanks);
-  };
+  // Retrieving the data makes them a standard object and not a class, so they need to be converted
+  adjustRetrievedData(sessions: any) {
+    this.adjustDates(sessions);
+    this.convertToSessionClass(sessions);
+  }
 
-  insertBlanks(day: any, blanks: any) {
-    for (let i = 0; i < blanks.length; i++) {
-      for (let j = 0; j < day.length; j++) {
-        if (day[j].start > blanks[i].start) {
-          day.splice(j, 0, blanks[i]);
-          break;
-        }
-      }
-      if (blanks[i].start > day[day.length - 1].start) day.push(blanks[i]);
+  // Mongo automatically changes the dates to strings
+  adjustDates(sessions: any) {
+    for (const s of sessions) {
+      s.start = new Date(s.start);
+      s.end = new Date(s.end);
+    }
+  }
+
+  // Converts objects to type Session...
+  convertToSessionClass(sessions: any) {
+    for (let s of sessions) {
+      s = new Session(s.title, s.start, s.end, s.category, s.colour);
     }
   }
 }

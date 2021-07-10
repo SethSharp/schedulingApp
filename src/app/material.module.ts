@@ -11,6 +11,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTimepickerModule } from 'mat-timepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ColorPickerModule } from 'ngx-color-picker'
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -26,6 +29,9 @@ import { ColorPickerModule } from 'ngx-color-picker'
     MatTimepickerModule,
     MatFormFieldModule,
     ColorPickerModule,
+    MatTooltipModule,
+    MatExpansionModule,
+    MatSnackBarModule,
   ],
   // Export the modules, so then app module can see them
   exports: [
@@ -39,6 +45,9 @@ import { ColorPickerModule } from 'ngx-color-picker'
     MatTimepickerModule,
     MatFormFieldModule,
     ColorPickerModule,
+    MatTooltipModule,
+    MatExpansionModule,
+    MatSnackBarModule,
   ],
 })
 export class MaterialModule {}
