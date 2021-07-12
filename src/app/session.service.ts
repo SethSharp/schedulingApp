@@ -1,3 +1,4 @@
+import { Item } from './item';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Session } from './session';
@@ -58,4 +59,48 @@ export class SessionService {
   deleteTable(t: string) {
     return this.http.delete(`${this.uri}/delete/${t}`);
   }
+
+
+  // To Do List functions
+  listExists(id:any) {
+    return this.http.get(`${this.uri}/listExists/${id}`)
+  }
+
+  createList(l:string) {
+    let list = {
+      title: l,
+      completed: [new Item('Testing completed items', "Complete items")],
+      inCompleted: [new Item('Testing in complete', "In complete items")]
+    }
+    return this.http.post(`${this.uri}/createList`, list)
+  }
+  retrieveList(title:string) {
+    return this.http.get(`${this.uri}/getToDoList/${title}`);
+  }
+
+  addItem(item:any, id:any) {
+    return this.http.post(`${this.uri}/addItem/${id}`, item)
+  }
+
+  updateItem(newItem:any, i:number, day:string) {
+    return this.http.post(`${this.uri}/updateItem/${day}`, {
+      updatedItem: newItem,
+      pos: i
+    })
+  }
+
+  completeItem(i:number, day:string) {
+    return this.http.post(`${this.uri}/completeItem/${day}`, {
+      i:i
+    })
+  }
+
+  moveItem(i:number, day:string) {
+    return this.http.post(`${this.uri}/moveItem/${day}`, {i:i})
+  }
+
+  deleteItem(i:number, day:string) {
+    return this.http.post(`${this.uri}/deleteItem/${day}`, {i:i})
+  }
+
 }

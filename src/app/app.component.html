@@ -6,15 +6,16 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-
-    <p>
-      <button mat-button (click)="sidenav.toggle()"> Create a new session </button>
+    <h3>
+      Current table: {{currentTable}}
       <button mat-button (click)="changeTable()"> Change table </button>
-    </p>
+      <button mat-button (click)="openToDoList()"> To Do List </button>
 
+
+    </h3>
     <mat-grid-list cols="15" rowHeight="50px">
       <mat-grid-tile *ngFor="let head of headerContent" [colspan]="head.s">
-        {{ head.t }}
+          {{ head.t }}
       </mat-grid-tile>
     </mat-grid-list>
 

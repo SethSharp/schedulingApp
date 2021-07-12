@@ -14,6 +14,7 @@ import { ColorPickerModule } from 'ngx-color-picker'
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatListModule } from '@angular/material/list';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatTooltipModule,
     MatExpansionModule,
     MatSnackBarModule,
+    MatListModule,
   ],
   // Export the modules, so then app module can see them
   exports: [
@@ -48,6 +50,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatTooltipModule,
     MatExpansionModule,
     MatSnackBarModule,
+    MatListModule,
   ],
 })
 export class MaterialModule {}

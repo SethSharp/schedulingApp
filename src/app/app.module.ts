@@ -15,7 +15,7 @@ import { MatTimepickerModule } from 'mat-timepicker';
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,],
   imports: [
     BrowserModule,
     AppRoutingModule,

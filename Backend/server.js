@@ -130,6 +130,92 @@ app.delete("/delete/:id", (req, res) => {
   })
 })
 
+// To Do List functions
+let listSchema = {
+  title: String,
+  completed: Array,
+  inCompleted: Array
+}
+
+let List = mongoose.model("lists", listSchema)
+
+app.get("/listExists/:id", (req, res) => {
+  List.findOne({title:req.params.id}).then(r => {
+    if (r) {
+      res.json(true)
+    } else {
+      res.json(false)
+    }
+  })
+})
+
+app.post("/createList", (req, res) => {
+  list = new List(req.body)
+  list.save().then(list=> {
+    console.log(list)
+    res.json(list)
+  }).catch(err => console.log(err))
+})
+
+app.get("/getToDoList/:id", (req, res) => {
+  // Find one will not return an array (Of one), find one returns one object
+  List.findOne({title: req.params.id}, (err, list) => {
+    if(!err) {
+      res.json(list)
+    } else { res.json(false) }
+  })
+})
+
+app.post("/addItem/:id", (req, res) => {
+  List.findOne({title:req.params.id}, (err, list) => {
+    list.completed.push(req.body)
+    list.save().then(list => {
+      console.log(list)
+      res.json(list)
+    }).catch(err => console.log("Doesn't exist..."))
+
+  })
+})
+
+app.post("/updateItem/:id", (req, res) => {
+  List.findOne({title: req.params.id}, (err, list) => {
+    list.completed[req.body.pos] = req.body.updatedItem
+    list.save().then((list) => {
+    }).catch((err) => console.log(err) )
+  })
+})
+
+app.post("/completeItem/:day", (req, res) => {
+  List.findOne({title: req.params.day}, (err, list) => {
+    list.inCompleted.push(list.completed[req.body.i])
+    list.completed.splice(req.body.i, 1)
+    list.save().then((l) => {
+      res.json('')
+    }).catch(err => console.log(err))
+  })
+})
+
+app.post("/moveItem/:day", (req, res) => {
+  List.findOne({title: req.params.day}, (err, list) => {
+    let item = list.inCompleted[req.body.i]
+    list.completed.push(item)
+    list.inCompleted.splice(req.body.i,1)
+    list.save().then(list => {
+      res.json(list)
+    }).catch(err=>console.log(err))
+  })
+})
+
+app.post("/deleteItem/:day", (req, res) => {
+  List.findOne({title:req.params.day}, (err, list) => {
+    list.inCompleted.splice(req.body.i)
+    list.save().then(list => {
+      res.json(list)
+    }).catch(err => console.log(err))
+  })
+})
+
+
 app.listen(port, () => {
   console.log("Listening on port:", port)
 })

@@ -1,3 +1,4 @@
+import { ToDoListComponent } from './to-do-list/to-do-list.component';
 import { GetTimetableComponent } from './get-timetable/get-timetable.component';
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
 import { Component, OnInit } from '@angular/core';
@@ -55,13 +56,13 @@ export class AppComponent implements OnInit {
 
   headerContent = [
     { t: 'TIME', s: 1 },
-    { t: 'MON', s: 2 },
-    { t: 'TUE', s: 2 },
-    { t: 'WED', s: 2 },
-    { t: 'THUR', s: 2 },
-    { t: 'FRI', s: 2 },
-    { t: 'SAT', s: 2 },
-    { t: 'SUN', s: 2 },
+    { t: 'Monday', s: 2 },
+    { t: 'Tuesday', s: 2 },
+    { t: 'Wednesday', s: 2 },
+    { t: 'Thursday', s: 2 },
+    { t: 'Friday', s: 2 },
+    { t: 'Saturday', s: 2 },
+    { t: 'Sunday', s: 2 },
   ];
 
   constructor(
@@ -301,5 +302,15 @@ export class AppComponent implements OnInit {
     for (let s of sessions) {
       s = new Session(s.title, s.start, s.end, s.category, s.colour);
     }
+  }
+
+  openToDoList(dayTitle:string="Monday") {
+    const dialogRef = this.dialog.open(ToDoListComponent, {
+      width: '800px',
+      height: '600px',
+      data: {
+        title: dayTitle,
+      }
+    })
   }
 }
