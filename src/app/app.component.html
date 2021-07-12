@@ -1,4 +1,5 @@
 
+
 <mat-sidenav-container class="example-container">
 
   <mat-sidenav #sidenav mode="side" class="side-bar" >
@@ -10,19 +11,17 @@
       Current table: {{currentTable}}
       <button mat-button (click)="changeTable()"> Change table </button>
       <button mat-button (click)="openToDoList()"> To Do List </button>
-
-
     </h3>
-    <mat-grid-list cols="15" rowHeight="50px">
+    <mat-grid-list cols="15" rowHeight="3.125rem">
       <mat-grid-tile *ngFor="let head of headerContent" [colspan]="head.s">
           {{ head.t }}
       </mat-grid-tile>
     </mat-grid-list>
 
-    <mat-grid-list cols="15" rowHeight="1500px" style="margin-top: 3px">
+    <mat-grid-list cols="15" rowHeight="93.75rem">
       <mat-grid-tile [colspan]="1">
         <div class="internalMatGrid">
-          <mat-grid-list cols="1" rowHeight="100px" *ngFor="let time of times">
+          <mat-grid-list cols="1" rowHeight="6.25rem" *ngFor="let time of times">
             <mat-grid-tile [colspan]="1">
               {{ time }}
             </mat-grid-tile>
@@ -31,7 +30,7 @@
       </mat-grid-tile>
 
       <mat-grid-tile *ngFor="let d of days; let j = index" [colspan]="2">
-        <div style="width: 140px; height: 1500px">
+        <div style="width: 95%; height: 100%">
           <app-day-table
             [getAmount]="getAmount"
             [getHeight]="getHeight"

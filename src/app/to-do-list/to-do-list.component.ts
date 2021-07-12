@@ -76,6 +76,8 @@ export class ToDoListComponent implements OnInit {
     let newItem = new Item(this.editTitle, this.editDescription);
     this.sessionServ.addItem(newItem, this.selectedDay).subscribe((d) => {
       this.items.push(newItem);
+      this.editTitle = ""
+      this.editDescription = ""
     });
   }
 

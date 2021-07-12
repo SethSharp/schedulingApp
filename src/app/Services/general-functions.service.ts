@@ -46,4 +46,11 @@ export class GeneralFunctionsService {
       duration: 4000,
     });
   }
+
+  xIsEqualToY(t1:Date,t2:Date) {
+    if (t1.getHours() == t2.getHours()) {
+      return t1.getMinutes() == t2.getMinutes()
+    }
+    return false
+  }
 }

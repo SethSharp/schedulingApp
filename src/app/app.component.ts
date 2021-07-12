@@ -14,7 +14,6 @@ import { GeneralFunctionsService } from './Services/general-functions.service';
 })
 export class AppComponent implements OnInit {
 
-
   dayTitles = this.gServ.dayTitles;
   rowHeight = 100;
   startTime = this.gServ.startTime
@@ -79,14 +78,8 @@ export class AppComponent implements OnInit {
     this.sessionServ.retrieveAllTables().subscribe((d) => {
       this.tables = d
       let defaulted = false
-      let defaultH=250
-      // Height for the text and input + the extra height for other tables
-      let height = defaultH+(this.tables.length*60)
-      if (this.tables.length == 0) {
-        height = defaultH
-      }
       const dialogRef = this.dialog.open(GetTimetableComponent, {
-        height: height+"px",
+        height: this.getDialogHeight(this.tables)+"px",
         width: '400px',
         data: {
           tables: this.tables
@@ -103,6 +96,13 @@ export class AppComponent implements OnInit {
         this.loadTable(this.currentTable);
       });
     });
+  }
+
+  getDialogHeight(t:any) {
+    let d = 250
+    if (t.length > 5) {
+      return d+(5*50)
+    } return d+(t.length*50)
   }
 
   loadTable(t: string) {
@@ -166,8 +166,8 @@ export class AppComponent implements OnInit {
   // When the user clicks on a blank session. It will create a new one
   openSessionDialog = (days: any, dayTitle: string, i: number) => {
     const dialogRef = this.dialog.open(SessionDialogComponent, {
-      height: '500px',
-      width: '400px',
+      height: '70%',
+      width: '40%',
       data: {
         sessions: days,
         dayTitle: dayTitle,
@@ -230,30 +230,31 @@ export class AppComponent implements OnInit {
 
   insertEndSession(day: any, start: Date) {
     // Blank New Sesh (new blank or nothing)
-    if (start >= this.endTime) return;
+    if (this.gServ.xIsGreaterThanY(start, this.endTime)) return;
     // heightNeeds to have a time value (11PM)
     let newBlank = new Session('', start, this.endTime);
     day.push(newBlank);
   }
 
   insertEndSessionMatch(day: any, start: Date) {
-    if (start >= this.endTime) return;
+    if (this.gServ.xIsGreaterThanY(start, this.endTime)) return;
     let newBlank = new Session('', start, this.endTime);
     day.push(newBlank);
   }
 
   viewEditSession = (day: any, i: number, t: string) => {
-    console.log(day);
+    console.log(day)
     const dialogRef = this.dialog.open(ViewSessionComponent, {
       height: '190px',
       width: '300px',
-      data: { day: day, i: i },
+      data: { day: day, i: i, insertData: this.insertData, t:t },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result == null) return;
       if (result.t == 'd') {
         this.replaceSessionWithBlank(result.day, result.i);
       }
+      console.log(result.day)
       this.sessionServ
         .updateDay(result.day, t, this.currentTable)
         .subscribe(() => {});
@@ -305,7 +306,7 @@ export class AppComponent implements OnInit {
   }
 
   openToDoList(dayTitle:string="Monday") {
-    const dialogRef = this.dialog.open(ToDoListComponent, {
+    this.dialog.open(ToDoListComponent, {
       width: '800px',
       height: '600px',
       data: {

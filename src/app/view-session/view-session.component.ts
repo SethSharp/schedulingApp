@@ -1,13 +1,12 @@
-
-import { GeneralFunctionsService } from './../Services/general-functions.service';
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionDialogComponent } from '../session-dialog/session-dialog.component';
-import { Session } from '../session'
-import { splitClasses } from '@angular/compiler';
+import { Session } from './../session';
+import { GeneralFunctionsService } from '../Services/general-functions.service';
+
 @Component({
   selector: 'app-view-session',
   templateUrl: './view-session.component.html',
@@ -29,9 +28,11 @@ export class ViewSessionComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       day: any;
-      i: any;
-      blanks: any;
+      i: number;
+      insertData: any;
+      t: string;
     },
+    private gServ: GeneralFunctionsService
   ) {
     this.pos = this.data.i;
     this.session = this.data.day[this.pos];
@@ -64,20 +65,15 @@ export class ViewSessionComponent implements OnInit {
     try {
       if (day[i - 1].title == '') {
         startTime = day[i - 1].start;
-
       }
     } catch {} // start time already set to the beginning of the session
-
     try {
       if (day[i + 1].title == '') {
         endTime = day[i + 1].end;
-
       }
     } catch {} // Same as before, uses end time default time
     startTime.setSeconds(0)
     endTime.setSeconds(0)
-
-
 
     this.openSessionDialog(day, this.session, startTime, endTime);
   }
@@ -95,13 +91,8 @@ export class ViewSessionComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      if (result == null) return;
-      try {
-        if (result) {
-          this.adjustSessions(this.pos, day, result);}
-      } catch {
-        return;
-      }
+      if (result == null) return
+      this.adjustSessions(this.pos, day, result);
     });
   };
 
@@ -112,22 +103,24 @@ export class ViewSessionComponent implements OnInit {
         let d = day[i+1]  // There is a session after the edited one
         // So its start needs to be reset
         if (d.title == '') {
-          d.setStart(newData.end)
-          if (newData.end.getHours() == this.height.getHours()) {
-            if (newData.end.getMinutes() == this.height.getMinutes()){
-              day.pop()
-            }
+          d.start = newData.end
+          if (this.gServ.xIsEqualToY(newData.end, this.height)) {
+            day.pop()
+          } else {
+            d.start = newData.end
           }
         } else {
-          if (newData.end < this.height) {
-            if (d.start < this.height) {
-              day.splice(i,0, new Session('', newData.end, d.start))
-            }
+          // Have a session
+          if (this.gServ.xIsEqualToY(newData.end, d.start)) { // End of edit is start of next
+            day.splice(i+1,1)
+          } else {
+            day.splice(i+1, 0, new Session('',newData.end, d.start))
           }
+
         }
         console.log('1')
       } catch { // This case means that the next session doesn't exist, so the end
-        if (newData.end < this.height) { // Then there can be an end session
+        if (!this.gServ.xIsGreaterThanY(newData.end, this.height)) { // Then there can be an end session
           day.push(new Session('', newData.end, this.height))
         }
         console.log('2');
@@ -135,19 +128,18 @@ export class ViewSessionComponent implements OnInit {
     }
 
     if (this.ogStart != newData.start) {
-      console.log(this.ogStart, newData.start)
       try {
         let d = day[i-1] // There is a session prior to the edited one
         if (d.title == '') {
-          if (newData.start == this.height) {
+          if (this.gServ.xIsEqualToY(newData.start,this.startTime)) {
             day.splice(0,1)
-            console.log("equal")
           } else {
-            d.setEnd(newData.start)
+            // The break end time is set to the start of the new
+            day.splice(i-1,1)
           }
-
         } else {
-          day.splice(i,0, new Session('',d.end, newData.start))
+          // There is a session, so need to set the end to the start of the new
+          day.splice(i, 0, new Session('', d.end, newData.start))
         }
 
         console.log('3');

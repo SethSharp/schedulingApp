@@ -29,6 +29,8 @@ export class GetTimetableComponent implements OnInit {
   submitTable(t: string = this.table) {
     if (t.length > 0) {
       this.dRef.close(t);
+    } else {
+      this.gServ.openSnack("Enter a valid title...")
     }
   }
 
