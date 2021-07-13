@@ -1,3 +1,4 @@
+import { SettingsComponent } from './settings/settings.component';
 import { ToDoListComponent } from './to-do-list/to-do-list.component';
 import { GetTimetableComponent } from './get-timetable/get-timetable.component';
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
@@ -312,4 +313,23 @@ export class AppComponent implements OnInit {
       }
     })
   }
+
+  openSettings() {
+    // Open a dialog
+    /*
+      - Edit categories (title, colour)
+        + Will affect existing sessions with set cats, so will need to edit them all
+        + Possibly integrate that loading thing from angular mat
+        + Basically go through each session and if the cat is the old cat, then change
+        + Then use that existing function to add the entire week back to the data base...
+
+      - Default table
+        + There can be a mini table (turn table into component...), to
+    */
+   this.dialog.open(SettingsComponent, {
+     height: "500px",
+     width: "400px"
+   })
+  }
+
 }

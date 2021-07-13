@@ -10,6 +10,7 @@ import { MaterialModule } from './material.module';
 import { GetTimetableComponent } from './get-timetable/get-timetable.component';
 import { ToDoListComponent } from './to-do-list/to-do-list.component';
 import { EditItemComponent } from './edit-item/edit-item.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { EditItemComponent } from './edit-item/edit-item.component';
     GetTimetableComponent,
     ToDoListComponent,
     EditItemComponent,
+    SettingsComponent,
   ],
   exports: [
     DayTableComponent,
@@ -29,6 +31,7 @@ import { EditItemComponent } from './edit-item/edit-item.component';
     GetTimetableComponent,
     ToDoListComponent,
     EditItemComponent,
+    SettingsComponent,
   ],
   imports: [CommonModule, FormsModule, MaterialModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
