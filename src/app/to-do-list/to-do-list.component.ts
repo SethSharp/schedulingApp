@@ -86,14 +86,15 @@ export class ToDoListComponent implements OnInit {
       width: '500px',
       height: '300px',
       data: {
-        title: item.getTitle(),
-        description: item.getDesc(),
+        a: item.getTitle(),
+        b: item.getDesc(),
+        info: ['Title...', 'Description...'],
         i: i,
-        table: this.data.title,
+        title: "Edit item"
       },
     });
     dialogRef.afterClosed().subscribe((d) => {
-      let n = new Item(d.title, d.description);
+      let n = new Item(d.a, d.b);
       this.items[i] = n
       this.sessionServ.updateItem(n, i, this.selectedDay).subscribe(()=>{})
     });
@@ -101,7 +102,6 @@ export class ToDoListComponent implements OnInit {
 
   completeItem(i: number) {
     // REMOVE FROM INCOMPLETE => COMPLETE
-
     // Save new list, or can splice in service, shall try
     this.sessionServ.completeItem(i, this.selectedDay).subscribe((l) => {
       // Don't need to create a new list just remove and it will be the same

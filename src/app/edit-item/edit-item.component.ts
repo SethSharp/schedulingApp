@@ -10,26 +10,38 @@ import { SessionService } from '../session.service';
 export class EditItemComponent implements OnInit {
 
   item:any;
-
+  a:any;
+  b:any;
+  info = ['',''];
+  title = '';
+  color="red"
   constructor(
     private dialogRef: MatDialogRef<EditItemComponent>,
     @Inject(MAT_DIALOG_DATA)
     private data: {
-      title:string,
-      description: string,
+      a:any,
+      b: any,
+      info: any,
       i: number,
-      table: string
-    },
-    private sessionServ: SessionService
+      title: string
+    }
   ) {
-    this.item = new Item(this.data.title, this.data.description)
+    this.title = this.data.title
+    this.info[0] = this.data.info[0]
+    this.info[1] = this.data.info[1]
+    this.a = this.data.a
+    this.b = this.data.b
+    // this.item = new Item(this.data.title, this.data.description)
   }
 
   ngOnInit(): void {}
 
 
   close() {
-    this.sessionServ.updateItem(this.item, this.data.i, this.data.table)
-    this.dialogRef.close(this.item)
+    if (this.a=='') {
+      this.dialogRef.close({a:this.a, b:this.color})
+    } else {
+      this.dialogRef.close({ a: this.a, b: this.color });
+    }
   }
 }

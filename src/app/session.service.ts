@@ -103,4 +103,13 @@ export class SessionService {
     return this.http.post(`${this.uri}/deleteItem/${day}`, {i:i})
   }
 
+
+  // Category
+  getCategories() {
+    return this.http.get(`${this.uri}/getCategories`)
+  }
+
+  addCategory(category:any) {
+    return this.http.post(`${this.uri}/addCategory`, category)
+  }
 }

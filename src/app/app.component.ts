@@ -243,9 +243,8 @@ export class AppComponent implements OnInit {
   }
 
   viewEditSession = (day: any, i: number, t: string) => {
-    console.log(day)
     const dialogRef = this.dialog.open(ViewSessionComponent, {
-      height: '190px',
+      height: '220px',
       width: '300px',
       data: { day: day, i: i, insertData: this.insertData, t:t },
     });
@@ -254,7 +253,6 @@ export class AppComponent implements OnInit {
       if (result.t == 'd') {
         this.replaceSessionWithBlank(result.day, result.i);
       }
-      console.log(result.day)
       this.sessionServ
         .updateDay(result.day, t, this.currentTable)
         .subscribe(() => {});

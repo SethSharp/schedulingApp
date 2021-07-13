@@ -215,6 +215,28 @@ app.post("/deleteItem/:day", (req, res) => {
   })
 })
 
+let catSchema = {
+  title: String,
+  colour: String
+}
+
+let Category = mongoose.model("categories", catSchema)
+
+app.get("/getCategories", (req, res) => {
+  Category.find({}, (err, cats) => {
+    if(!err) {
+      res.json(cats)
+    }
+  })
+})
+
+app.post("/addCategory", (req, res) => {
+  category = new Category(req.body)
+  category.save().then(cat => {
+    res.json(cat)
+  }).catch(err=>console.log(err))
+})
+
 
 app.listen(port, () => {
   console.log("Listening on port:", port)

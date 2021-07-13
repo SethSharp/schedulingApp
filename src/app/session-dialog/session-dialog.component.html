@@ -10,8 +10,13 @@
   <mat-form-field appearance="fill">
     <mat-label> {{selectedCat}}</mat-label>
     <mat-select>
-      <mat-option *ngFor="let c of categories | keyvalue" (click)="setCat(c)">
-        {{c.key}}
+      <mat-option *ngFor="let c of categories" >
+         <div *ngIf="c.title=='Custom'" (click)="customCategory()">
+          {{c.title}}
+        </div>
+        <div *ngIf="c.title!='Custom'" (click)="setCat(c)">
+          {{c.title}}
+        </div>
       </mat-option>
     </mat-select>
   </mat-form-field>

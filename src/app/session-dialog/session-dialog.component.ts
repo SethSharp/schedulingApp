@@ -3,7 +3,9 @@ import { GeneralFunctionsService } from './../Services/general-functions.service
 
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA , MatDialogRef } from '@angular/material/dialog';
-
+import { MatDialog } from '@angular/material/dialog';
+import { SessionService } from '../session.service';
+import { EditItemComponent } from '../edit-item/edit-item.component';
 @Component({
   selector: 'app-session-dialog',
   templateUrl: './session-dialog.component.html',
@@ -19,7 +21,7 @@ export class SessionDialogComponent implements OnInit {
   max: Date = new Date();
   nMin: Date = new Date();
   nMax: Date = new Date();
-  categories = this.gService.categories;
+  categories:any;
 
   selectedCat = 'Select a category';
 
@@ -34,7 +36,9 @@ export class SessionDialogComponent implements OnInit {
       e: Date;
       table: string;
     },
-    private gService: GeneralFunctionsService
+    private gService: GeneralFunctionsService,
+    private dialog: MatDialog,
+    private sessionServ: SessionService
   ) {
     this.startTime = this.data.session.start;
     this.endTime = this.data.session.end;
@@ -45,6 +49,10 @@ export class SessionDialogComponent implements OnInit {
     this.selectedCat = this.data.session.category;
     this.title = this.data.session.title;
     this.color = this.data.session.colour;
+    this.sessionServ.getCategories().subscribe(d => {
+      this.categories = d
+      this.categories.push({title:'Custom'})
+    })
   }
 
   ngOnInit(): void {}
@@ -100,12 +108,38 @@ export class SessionDialogComponent implements OnInit {
 
   canSelectColour = true;
   setCat(c: any) {
-    this.selectedCat = c.key;
-    if (c.key == 'Other') {
+    this.selectedCat = c.title;
+    if (this.selectedCat == 'Other') {
       this.canSelectColour = false;
     } else {
       this.canSelectColour = true;
-      this.color = c.value;
+      this.color = c.colour;
     }
+  }
+
+  customCategory() {
+    // Open a dialog with the info, then return the cat and set the current cat to
+    // the one created
+    console.log("opened custom cat")
+    const dialogRef = this.dialog.open(EditItemComponent, {
+      width: '500px',
+      height: '300px',
+      data: {
+        a: "",
+        b: "",
+        info: ["Name...", "Colour..."],
+        title: "Create new category"
+      },
+    });
+    dialogRef.afterClosed().subscribe((d) => {
+      try {
+        this.sessionServ.addCategory({title:d.a, colour:d.b}).subscribe((c) => {
+          this.setCat({title:d.a, colour:d.b})
+          this.categories.push({title:d.a, colour:d.a})
+        })
+      } catch {
+        // console.log("Exited without submitting")
+      }
+    });
   }
 }

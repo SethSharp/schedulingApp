@@ -1,20 +1,28 @@
 
 <div style="text-align: center;">
 
-  <h1> Edit item </h1>
+  <h1> {{title}} </h1>
 
   <mat-form-field float appearance="outline">
-    <mat-label> Title </mat-label>
-    <input matInput [(ngModel)]="item.title">
+    <mat-label> {{info[0]}} </mat-label>
+    <input matInput [(ngModel)]="a">
   </mat-form-field>
   <br>
-  <mat-form-field float appearance="outline" style="width: 80%;">
-    <mat-label> Description </mat-label>
-    <input matInput maxRows=10  [(ngModel)]="item.description">
-  </mat-form-field>
+
+  <div *ngIf="title=='Edit item'">
+    <mat-form-field float appearance="outline" style="width: 80%;">
+      <mat-label> {{info[1]}} </mat-label>
+      <input matInput maxRows=10  [(ngModel)]="b">
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="title!='Edit item'">
+    <input [style.background]="color"
+        [(colorPicker)]="color">
+  </div>
 
   <br>
 
-  <button mat-button (click)="close()"> Close </button>
+  <button mat-button (click)="close()"> Finish </button>
 
 </div>
