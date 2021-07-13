@@ -1,11 +1,12 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
-
+import { MatDialog } from '@angular/material/dialog';
+import { EditItemComponent } from '../edit-item/edit-item.component';
 @Injectable({
   providedIn: 'root',
 })
 export class GeneralFunctionsService {
-  constructor(private snack: MatSnackBar) {}
+  constructor(private snack: MatSnackBar, private dialog: MatDialog) {}
 
   startTime = this.setTime(8, 0);
   endTime = this.setTime(23, 0);
@@ -52,5 +53,18 @@ export class GeneralFunctionsService {
       return t1.getMinutes() == t2.getMinutes()
     }
     return false
+  }
+
+  openEditItemDialog(a:any, b:any, info:any, title:any) {
+    return this.dialog.open(EditItemComponent, {
+      width: '500px',
+      height: '300px',
+      data: {
+        a: a,
+        b: b,
+        info: info,
+        title: title,
+      },
+    });
   }
 }

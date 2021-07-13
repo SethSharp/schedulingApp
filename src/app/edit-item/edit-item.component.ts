@@ -22,7 +22,6 @@ export class EditItemComponent implements OnInit {
       a:any,
       b: any,
       info: any,
-      i: number,
       title: string
     }
   ) {
@@ -31,15 +30,21 @@ export class EditItemComponent implements OnInit {
     this.info[1] = this.data.info[1]
     this.a = this.data.a
     this.b = this.data.b
-    // this.item = new Item(this.data.title, this.data.description)
+    if (this.title != 'Edit item') {
+      this.color = this.b
+    } else {
+      this.color = "black"
+    }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
 
 
   close() {
-    if (this.a=='') {
-      this.dialogRef.close({a:this.a, b:this.color})
+    if (this.title=='Edit item') {
+      this.dialogRef.close({a:this.a, b:this.b})
     } else {
       this.dialogRef.close({ a: this.a, b: this.color });
     }

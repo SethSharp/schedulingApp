@@ -82,17 +82,13 @@ export class ToDoListComponent implements OnInit {
   }
 
   editItem(item: any, i: number) {
-    const dialogRef = this.dialog.open(EditItemComponent, {
-      width: '500px',
-      height: '300px',
-      data: {
-        a: item.getTitle(),
-        b: item.getDesc(),
-        info: ['Title...', 'Description...'],
-        i: i,
-        title: "Edit item"
-      },
-    });
+    const dialogRef = this.gServ.openEditItemDialog(
+      item.getTitle(),
+      item.getDesc(),
+      ['Title...', 'Description'],
+      'Edit item',
+    );
+    
     dialogRef.afterClosed().subscribe((d) => {
       let n = new Item(d.a, d.b);
       this.items[i] = n

@@ -237,6 +237,22 @@ app.post("/addCategory", (req, res) => {
   }).catch(err=>console.log(err))
 })
 
+app.post("/editCategory", (req, res) => {
+  Category.findOne({title:req.body.o}, (err, cat) => {
+    cat.title = req.body.n.title
+    cat.colour = req.body.n.colour
+    cat.save().then(cat => {
+      res.json('')
+    }).catch(err=>console.log(err))
+  })
+})
+
+app.delete("/deleteCategory/:c", (req, res) => {
+  Category.deleteOne({title:req.params.c}, (err) => {
+    if (err) console.log(err)
+    else res.json(true)
+  })
+})
 
 app.listen(port, () => {
   console.log("Listening on port:", port)

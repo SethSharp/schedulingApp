@@ -120,17 +120,9 @@ export class SessionDialogComponent implements OnInit {
   customCategory() {
     // Open a dialog with the info, then return the cat and set the current cat to
     // the one created
-    console.log("opened custom cat")
-    const dialogRef = this.dialog.open(EditItemComponent, {
-      width: '500px',
-      height: '300px',
-      data: {
-        a: "",
-        b: "",
-        info: ["Name...", "Colour..."],
-        title: "Create new category"
-      },
-    });
+    const dialogRef = this.gService.openEditItemDialog(
+      '','', ["Name...", "Colour..."], "Create new category")
+
     dialogRef.afterClosed().subscribe((d) => {
       try {
         this.sessionServ.addCategory({title:d.a, colour:d.b}).subscribe((c) => {
