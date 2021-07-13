@@ -53,6 +53,7 @@ app.get("/table/:id", (req, res) => {
 
 app.post("/addSession/:id", (req, res) => {
   let newDay = req.body.d
+  console.log(newDay)
   let t = req.body.title
   Table.findOne({name:req.params.id}, (err, table) => {
     // Now we have the table, need to find the right day to add to
@@ -83,26 +84,29 @@ app.post("/addSession/:id", (req, res) => {
         break;
     }
     table.save().then(table => {}).catch(err => {
-      console.log(err)
+      console.log("err")
     })
   })
 })
 
 // Temporary to test, soon add ^^ will be used to save each one
-app.post("/updateWeek", (req, res) => {
-  Table.findOne({name:req.body.id}, (err, day) => {
+app.post("/updateWeek/:id", (req, res) => {
+  Table.findOne({name:req.params.id}, (err, day) => {
     if (!day) {
-      console.log(err)
+      res.json('1, does not exist')
     } else {
-      let x = req.body.content
-      day.m = x[0].sessions
-      day.t = x[1].sessions
-      day.w = x[2].sessions
-      day.th = x[3].sessions
-      day.f = x[4].sessions
-      day.s = x[5].sessions
-      day.su = x[6].sessions
-      day.save().then(day => {}).catch(err => {
+      let x = req.body
+      day.m = x.m
+      day.t = x.t
+      day.w = x.w
+      day.th = x.th
+      day.f = x.f
+      day.s = x.s
+      day.su = x.su
+      day.save().then(day => {
+        res.json('Success in setting the new week')
+      }).catch(err => {
+        res.json('2, cant save')
         console.log(err)
       })
     }
@@ -152,7 +156,6 @@ app.get("/listExists/:id", (req, res) => {
 app.post("/createList", (req, res) => {
   list = new List(req.body)
   list.save().then(list=> {
-    console.log(list)
     res.json(list)
   }).catch(err => console.log(err))
 })
@@ -170,7 +173,6 @@ app.post("/addItem/:id", (req, res) => {
   List.findOne({title:req.params.id}, (err, list) => {
     list.completed.push(req.body)
     list.save().then(list => {
-      console.log(list)
       res.json(list)
     }).catch(err => console.log("Doesn't exist..."))
 

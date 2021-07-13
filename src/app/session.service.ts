@@ -41,6 +41,10 @@ export class SessionService {
     return this.http.post(`${this.uri}/createTable`, userSchema);
   }
 
+  setWeek(newWeek:any, table:string) {
+    return this.http.post(`${this.uri}/updateWeek/${table}`, newWeek)
+  }
+
   updateDay(newDay: any, title: string, table: string) {
     return this.http.post(`${this.uri}/addSession/${table}`, {
       d: newDay,
@@ -74,6 +78,7 @@ export class SessionService {
     }
     return this.http.post(`${this.uri}/createList`, list)
   }
+
   retrieveList(title:string) {
     return this.http.get(`${this.uri}/getToDoList/${title}`);
   }

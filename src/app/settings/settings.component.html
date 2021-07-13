@@ -1,22 +1,19 @@
 <h1>Settings</h1>
-
+<h3> All settings will apply to the currently selected table</h3>
 <mat-card>
   <mat-card-header>
     <mat-card-title> Categories </mat-card-title>
+    <mat-card-subtitle> Edit existing categories</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <mat-card-subtitle-title> Edit existing categories</mat-card-subtitle-title>
+
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>Categories</mat-panel-title>
         <mat-panel-description> Edit</mat-panel-description>
       </mat-expansion-panel-header>
 
-      <mat-card
-        *ngFor="let cat of categories; let i = index"
-      >
-
-        <span>
+        <span *ngFor="let cat of categories; let i = index">
           <h3 [style.color]="cat.colour" > {{cat.title}}
 
             <button
@@ -38,7 +35,51 @@
 
         </span>
 
-      </mat-card>
     </mat-expansion-panel>
   </mat-card-content>
 </mat-card>
+
+<br>
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title> Reset week to default </mat-card-title>
+    <mat-card-subtitle> Resetting the week will set the currently selected table to a table
+                        of your choice (Input). Example uses:
+                        - Weekly classes
+                        - Changing work schedules
+                        Basically to clear up the sessions in-between these commitments
+                        that are on a weekly basis
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <input matInput type="text" #table placeholder="Table to replace '{{data.table}}' with...">
+    <button mat-button (click)="resetToDefault(table.value)" color="warn" > Reset </button>
+  </mat-card-content>
+</mat-card>
+
+<br>
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title> Reset week </mat-card-title>
+    <mat-card-subtitle> Resetting the week will delete all sessions and replace with blanks
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Days </mat-panel-title>
+          <mat-panel-description> Reset </mat-panel-description>
+        </mat-expansion-panel-header>
+        <h3 *ngFor="let day of week">
+          {{day}}
+          <button mat-button class="reset-day" (click)="resetDay(day)" color="warn"> Reset</button>
+        </h3>
+      </mat-expansion-panel>
+
+    <button mat-button (click)="resetWeek()" color="warn" > Reset Week </button>
+  </mat-card-content>
+</mat-card>
+

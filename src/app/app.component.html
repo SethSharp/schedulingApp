@@ -1,53 +1,11 @@
+<h3>
+  Current table: {{currentTable}}
+  <button mat-button (click)="changeTable()"> Change table </button>
+  <button mat-button (click)="openToDoList()"> To Do List </button>
+  <button mat-button (click)="openSettings()"> Settings </button>
+</h3>
 
-
-<mat-sidenav-container class="example-container">
-
-  <mat-sidenav #sidenav mode="side" class="side-bar" >
-    <app-side-menu-content [createSesh]="insertData" [days]="days"></app-side-menu-content>
-  </mat-sidenav>
-
-  <mat-sidenav-content>
-    <h3>
-      Current table: {{currentTable}}
-      <button mat-button (click)="changeTable()"> Change table </button>
-      <button mat-button (click)="openToDoList()"> To Do List </button>
-      <button mat-button (click)="openSettings()"> Settings </button>
-    </h3>
-    <mat-grid-list cols="15" rowHeight="3.125rem">
-      <mat-grid-tile *ngFor="let head of headerContent" [colspan]="head.s">
-          {{ head.t }}
-      </mat-grid-tile>
-    </mat-grid-list>
-
-    <mat-grid-list cols="15" rowHeight="93.75rem">
-      <mat-grid-tile [colspan]="1">
-        <div class="internalMatGrid">
-          <mat-grid-list cols="1" rowHeight="6.25rem" *ngFor="let time of times">
-            <mat-grid-tile [colspan]="1">
-              {{ time }}
-            </mat-grid-tile>
-          </mat-grid-list>
-        </div>
-      </mat-grid-tile>
-
-      <mat-grid-tile *ngFor="let d of days; let j = index" [colspan]="2">
-        <div style="width: 95%; height: 100%">
-          <app-day-table
-            [getAmount]="getAmount"
-            [getHeight]="getHeight"
-            [day]="d.sessions"
-            [viewSession]="viewEditSession"
-            [insertSession]="openSessionDialog"
-            [title]="d.d"
-            [dayPos]="j"
-          >
-          </app-day-table>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
-    <br/>
-
-  </mat-sidenav-content>
-  <p><button mat-button (click)="sidenav.toggle()"> </button></p>
-
-</mat-sidenav-container>
+<app-week-table
+  [days]="days"
+  [table]="currentTable"
+></app-week-table>
