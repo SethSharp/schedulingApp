@@ -63,17 +63,11 @@
   </div>
   <br>
 
-  <div style="background-color: lightgoldenrodyellow; text-align: center">
-    <mat-dialog-actions>
-      <button mat-button required (click)="cancel()">Cancel</button>
-      <button
-        mat-button
-        required
-        (click)="submitSessionBlock()"
-        cdkFocusInitial
-      >
-        Create
-      </button>
+
+</div>
+<div style="background-color: lightgoldenrodyellow; width: 100%;">
+    <mat-dialog-actions style="text-align: center;">
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button mat-button (click)="submitSessionBlock()">Create</button>
     </mat-dialog-actions>
   </div>
-</div>

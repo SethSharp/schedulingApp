@@ -107,7 +107,6 @@ app.post("/updateWeek/:id", (req, res) => {
         res.json('Success in setting the new week')
       }).catch(err => {
         res.json('2, cant save')
-        console.log(err)
       })
     }
   })

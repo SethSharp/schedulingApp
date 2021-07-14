@@ -88,8 +88,9 @@ export class ToDoListComponent implements OnInit {
       ['Title...', 'Description'],
       'Edit item',
     );
-    
+
     dialogRef.afterClosed().subscribe((d) => {
+      if (d==null) return
       let n = new Item(d.a, d.b);
       this.items[i] = n
       this.sessionServ.updateItem(n, i, this.selectedDay).subscribe(()=>{})

@@ -76,10 +76,19 @@ export class SettingsComponent implements OnInit {
   }
 
   resetWeek() {
-    for (let i = 0; i < this.days.length; i++) {
-      this.resetDay(this.days[i].d)
-    }
-    window.location.reload()
+    let userSchema = {
+      m: [new Session('', this.startTime, this.endTime)],
+      t: [new Session('', this.startTime, this.endTime)],
+      w: [new Session('', this.startTime, this.endTime)],
+      th: [new Session('', this.startTime, this.endTime)],
+      f: [new Session('', this.startTime, this.endTime)],
+      s: [new Session('', this.startTime, this.endTime)],
+      su: [new Session('', this.startTime, this.endTime)],
+    };
+    this.sessionServ.setWeek(userSchema, this.data.table).subscribe((r)=> {
+      console.log(r)
+      window.location.reload()
+    })
   }
 
   resetDay(d:string) {

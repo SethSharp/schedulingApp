@@ -190,7 +190,7 @@ export class WeeklyTableService {
   // When the user clicks on a blank session. It will create a new one
   openSessionDialog = (days: any, dayTitle: string, i: number, table:string) => {
     const dialogRef = this.dialog.open(SessionDialogComponent, {
-      height: '70%',
+      height: '90%',
       width: '40%',
       data: {
         sessions: days,

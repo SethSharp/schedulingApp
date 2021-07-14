@@ -30,11 +30,7 @@ export class EditItemComponent implements OnInit {
     this.info[1] = this.data.info[1]
     this.a = this.data.a
     this.b = this.data.b
-    if (this.title != 'Edit item') {
-      this.color = this.b
-    } else {
-      this.color = "black"
-    }
+    this.color = this.b
   }
 
   ngOnInit(): void {
