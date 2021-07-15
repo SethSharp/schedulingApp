@@ -12,8 +12,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComponentModule } from './component.module';
 import { MaterialModule } from './material.module';
 import { MatTimepickerModule } from 'mat-timepicker';
+import { ItemSessionComponent } from './item-session/item-session.component';
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ItemSessionComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

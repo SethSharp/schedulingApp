@@ -1,0 +1,7 @@
+<div *ngFor="let blank of days; let i = index" style="text-align: center;">
+  <h4>
+    {{blank.start.toLocaleTimeString()}} - {{blank.end.toLocaleTimeString()}}
+    <button mat-button color="primary" (click)="open(i)"> Select </button>
+  </h4>
+
+</div>

@@ -93,6 +93,8 @@ export class WeeklyTableService {
     const dialogRef = this.dialog.open(ViewSessionComponent, {
       height: '55%',
       width: '30%',
+      minWidth: "200px",
+      minHeight: "250px",
       data: { day: day, i: i, insertData: this.insertData, t: dayTitle },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -191,6 +193,8 @@ export class WeeklyTableService {
     const dialogRef = this.dialog.open(SessionDialogComponent, {
       height: '60%',
       width: '30%',
+      minHeight: "400px",
+      minWidth: "300px",
       data: {
         sessions: days,
         dayTitle: dayTitle,

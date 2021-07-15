@@ -2,7 +2,7 @@
   <mat-form-field appearance="fill">
     <mat-label> {{ selectedDay }}</mat-label>
     <mat-select>
-      <mat-option *ngFor="let d of days" (click)="setDay(d)">
+      <mat-option *ngFor="let d of days; let i = index" (click)="setDay(d, i)">
         {{ d }}
       </mat-option>
     </mat-select>
@@ -62,6 +62,15 @@
           color="warn"
         >
           Complete
+        </button>
+
+        <button
+          mat-button
+          style="text-align: right"
+          (click)="moveSession(i)"
+          color="accent"
+        >
+          Move to timetable
         </button>
       </span>
     </mat-expansion-panel>

@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dial
 import { SessionService } from '../session.service';
 import { Item } from "../item"
 import { GeneralFunctionsService } from '../Services/general-functions.service';
+import { ItemSessionComponent } from '../item-session/item-session.component';
 
 @Component({
   selector: 'app-to-do-list',
@@ -18,22 +19,25 @@ export class ToDoListComponent implements OnInit {
   editDescription: any;
   selectedDay:any;
   days = this.gServ.dayTitles
+  pos:number = 0;
 
   constructor(
     private dialogRef: MatDialogRef<ToDoListComponent>,
     @Inject(MAT_DIALOG_DATA)
     private data: {
-      title: string;
+      tableContent: any;
+      table: string;
     },
     private sessionServ: SessionService,
     private dialog: MatDialog,
     private gServ: GeneralFunctionsService
   ) {
-    this.selectedDay = this.data.title
+    this.pos = new Date().getDay()-1
+    this.selectedDay = this.days[this.pos]
   }
 
   ngOnInit(): void {
-    this.openToDoList(this.data.title);
+    this.openToDoList(this.selectedDay);
   }
 
   ngOnDestroy(): void {
@@ -121,12 +125,29 @@ export class ToDoListComponent implements OnInit {
     })
   }
 
-  setDay(d:string) {
+  setDay(d:string, i:number) {
     this.selectedDay = d
+    this.pos = i
     this.openToDoList(d);
   }
 
   close() {
     this.dialogRef.close();
+  }
+
+  moveSession(i:number) {
+    let d = this.data.tableContent[this.pos]
+    this.dialog.open(ItemSessionComponent, {
+      width: "30%",
+      height: "50%",
+      minHeight: "200px",
+      minWidth: "250px",
+      data: {
+        day: d,
+        item: this.items[i],
+        dayTitle: this.selectedDay,
+      tableTitle: this.data.table
+      }
+    })
   }
 }
