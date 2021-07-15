@@ -135,7 +135,7 @@ export class ToDoListComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  moveSession(i:number) {
+  insertSession(i:number) {
     let d = this.data.tableContent[this.pos]
     this.dialog.open(ItemSessionComponent, {
       width: "30%",
@@ -148,6 +148,20 @@ export class ToDoListComponent implements OnInit {
         dayTitle: this.selectedDay,
       tableTitle: this.data.table
       }
+    })
+  }
+
+  moveSession(i:number) {
+    // get the identifier for the next day (thisday+1)
+    // Then update that day adding this item then updating
+    // the current list by removing it
+
+    // Don't need to take 1, as that would be today
+    let tomorrow = this.days[new Date().getDay()]
+    this.sessionServ.addItem(this.items[i], tomorrow).subscribe(d=> {
+      this.sessionServ.deleteItem(i, this.selectedDay).subscribe(t=> {
+        this.items.splice(i,1)
+      })
     })
   }
 }

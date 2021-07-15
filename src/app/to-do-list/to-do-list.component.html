@@ -67,10 +67,18 @@
         <button
           mat-button
           style="text-align: right"
-          (click)="moveSession(i)"
+          (click)="insertSession(i)"
           color="accent"
         >
-          Move to timetable
+          Insert into timetable
+        </button>
+
+        <button
+          mat-button
+          style="text-align: right"
+          (click)="moveSession(i)"
+        >
+          Move to next day
         </button>
       </span>
     </mat-expansion-panel>
