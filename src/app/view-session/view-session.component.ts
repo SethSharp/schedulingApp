@@ -80,8 +80,8 @@ export class ViewSessionComponent implements OnInit {
 
   openSessionDialog = (day: any, session: any, start: Date, end: Date) => {
     const dialogRef = this.dialog.open(SessionDialogComponent, {
-      height: '500px',
-      width: '400px',
+      height: '60%',
+      width: '30%',
       data: {
         sessions: day,
         dayTitle: session.title,

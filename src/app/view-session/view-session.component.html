@@ -1,18 +1,16 @@
 
 
-<mat-card >
-  <mat-card-header style="text-align: center;">
-    <mat-card-title>
-      {{session.title}}
-    </mat-card-title>
-  </mat-card-header>
+<mat-card style="height: 100%;">
+  <h2>
+    {{session.title}}
+  </h2>
   <mat-card-subtitle>
     {{session.category}}
   </mat-card-subtitle>
   <mat-card-content>
     <p> Time-frame: {{x}} - {{y}} </p>
   </mat-card-content>
-  <div class="buttons">
+  <div>
     <button mat-raised-button color="warn" (click)="deleteSession()"> Delete </button>
     <button mat-raised-button color="primary" (click)="editSession()"> Edit </button>
   </div>

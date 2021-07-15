@@ -53,7 +53,6 @@ app.get("/table/:id", (req, res) => {
 
 app.post("/addSession/:id", (req, res) => {
   let newDay = req.body.d
-  console.log(newDay)
   let t = req.body.title
   Table.findOne({name:req.params.id}, (err, table) => {
     // Now we have the table, need to find the right day to add to
@@ -84,7 +83,7 @@ app.post("/addSession/:id", (req, res) => {
         break;
     }
     table.save().then(table => {}).catch(err => {
-      console.log("err")
+      console.log(err)
     })
   })
 })

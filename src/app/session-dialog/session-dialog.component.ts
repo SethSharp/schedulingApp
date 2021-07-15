@@ -57,9 +57,7 @@ export class SessionDialogComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  cancel() {
-    this.dialogRef.close(null);
-  }
+
 
   submitSessionBlock() {
     if (this.checkRanges()) {
@@ -106,15 +104,9 @@ export class SessionDialogComponent implements OnInit {
     this.nMax = this.endTime;
   }
 
-  canSelectColour = true;
   setCat(c: any) {
     this.selectedCat = c.title;
-    if (this.selectedCat == 'Other') {
-      this.canSelectColour = false;
-    } else {
-      this.canSelectColour = true;
-      this.color = c.colour;
-    }
+    this.color = c.colour;
   }
 
   customCategory() {

@@ -15,6 +15,7 @@ export class EditItemComponent implements OnInit {
   info = ['',''];
   title = '';
   color="red"
+  pos="top-right"
   constructor(
     private dialogRef: MatDialogRef<EditItemComponent>,
     @Inject(MAT_DIALOG_DATA)

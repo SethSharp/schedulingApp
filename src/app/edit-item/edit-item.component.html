@@ -17,8 +17,10 @@
   </div>
 
   <div *ngIf="title!='Edit item'">
-    <input [style.background]="color"
-        [(colorPicker)]="color">
+    <input  [style.background]="color"
+            [(colorPicker)]="color"
+            [cpCancelButton]="true"
+            [cpPosition]="pos">
   </div>
 
   <br>
