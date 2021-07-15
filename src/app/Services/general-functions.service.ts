@@ -57,8 +57,8 @@ export class GeneralFunctionsService {
 
   openEditItemDialog(a:any, b:any, info:any, title:any) {
     return this.dialog.open(EditItemComponent, {
-      width: '500px',
-      height: '300px',
+      width: '30%',
+      height: '40%',
       data: {
         a: a,
         b: b,

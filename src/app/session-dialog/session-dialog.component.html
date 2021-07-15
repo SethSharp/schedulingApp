@@ -1,41 +1,40 @@
-<div class="c">
-  <h2 mat-dialog-title>Enter in session details for {{ data.dayTitle }}</h2>
-
+<div style="text-align: center; height: 100%">
+  <h2>Enter in session details for {{ data.dayTitle }}</h2>
   <mat-form-field float appearance="outline">
     <mat-label> Title </mat-label>
     <input matInput required [(ngModel)]="title" />
   </mat-form-field>
 
-  <br>
-  <mat-form-field appearance="fill">
-    <mat-label> {{selectedCat}}</mat-label>
+  <br />
+  <mat-form-field appearance="outline">
+    <mat-label> {{ selectedCat }}</mat-label>
     <mat-select>
-      <mat-option *ngFor="let c of categories" >
-         <div *ngIf="c.title=='Custom'" (click)="customCategory()">
-          {{c.title}}
+      <mat-option *ngFor="let c of categories">
+        <div *ngIf="c.title == 'Custom'" (click)="customCategory()">
+          {{ c.title }}
         </div>
-        <div *ngIf="c.title!='Custom'" (click)="setCat(c)">
-          {{c.title}}
+        <div *ngIf="c.title != 'Custom'" (click)="setCat(c)">
+          {{ c.title }}
         </div>
       </mat-option>
     </mat-select>
   </mat-form-field>
 
-  <br>
-  <mat-form-field float appearance="outline" >
+  <br />
+  <mat-form-field float appearance="outline">
     <mat-label> Start time </mat-label>
-      <input
-        matTimepicker
-        placeholder="Start time"
-        [(ngModel)]="startTime"
-        mode="24h"
-        [minDate]="min"
-        [maxDate]="nMax"
-        (click)="changeMax()"
-      />
+    <input
+      matTimepicker
+      placeholder="Start time"
+      [(ngModel)]="startTime"
+      mode="24h"
+      [minDate]="min"
+      [maxDate]="nMax"
+      (click)="changeMax()"
+    />
   </mat-form-field>
 
-  <br>
+  <br />
   <div>
     <mat-form-field float appearance="outline">
       <mat-label> End time </mat-label>
@@ -51,23 +50,13 @@
     </mat-form-field>
   </div>
 
-  <br>
-  <div style="padding-top: 5px; padding-bottom: 5px;">
-
-    <input [style.background]="color"
-        [(colorPicker)]="color"
-        [cpCancelButton]="true"
-        [cpOKButton]="true"
-        [disabled]="canSelectColour"/>
-
+  <br />
+  <div style="padding-top: 5px; padding-bottom: 5px">
+    <input
+      [style.background]="color"
+      [(colorPicker)]="color"
+      [cpCancelButton]="true"
+    />
   </div>
-  <br>
-
-
+  <button mat-button (click)="submitSessionBlock()">Create</button>
 </div>
-<div style="background-color: lightgoldenrodyellow; width: 100%;">
-    <mat-dialog-actions style="text-align: center;">
-      <button mat-button (click)="cancel()">Cancel</button>
-      <button mat-button (click)="submitSessionBlock()">Create</button>
-    </mat-dialog-actions>
-  </div>

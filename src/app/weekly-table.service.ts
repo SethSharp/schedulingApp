@@ -7,7 +7,6 @@ import { SessionService } from './session.service';
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
 
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -92,8 +91,8 @@ export class WeeklyTableService {
 
   viewEditSession = (day: any, i: number, dayTitle: string, table:string) => {
     const dialogRef = this.dialog.open(ViewSessionComponent, {
-      height: '220px',
-      width: '300px',
+      height: '55%',
+      width: '30%',
       data: { day: day, i: i, insertData: this.insertData, t: dayTitle },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -190,8 +189,8 @@ export class WeeklyTableService {
   // When the user clicks on a blank session. It will create a new one
   openSessionDialog = (days: any, dayTitle: string, i: number, table:string) => {
     const dialogRef = this.dialog.open(SessionDialogComponent, {
-      height: '90%',
-      width: '40%',
+      height: '60%',
+      width: '30%',
       data: {
         sessions: days,
         dayTitle: dayTitle,

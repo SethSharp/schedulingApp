@@ -58,8 +58,8 @@ export class AppComponent implements OnInit {
       this.tables = d
       let defaulted = false
       const dialogRef = this.dialog.open(GetTimetableComponent, {
-        height: this.getDialogHeight(this.tables)+"px",
-        width: '400px',
+        height: (this.getDialogHeight(this.tables)/10)+"%",
+        width: '30%',
         data: {
           tables: this.tables
         }
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
   }
 
   getDialogHeight(t:any) {
-    let d = 250
+    let d = 350
     if (t.length > 5) {
       return d+(5*50)
     } return d+(t.length*50)
@@ -135,14 +135,14 @@ export class AppComponent implements OnInit {
     }
   }
 
-  openToDoList(dayTitle:string="Monday") {
+  openToDoList() {
     this.dialog.open(ToDoListComponent, {
-      width: '800px',
-      height: '600px',
+      width: '50%',
+      height: '80%',
       data: {
-        title: dayTitle,
-      }
-    })
+        title: this.dayTitles[new Date().getDay()-1],
+      },
+    });
   }
 
   openSettings() {
@@ -160,8 +160,8 @@ export class AppComponent implements OnInit {
 
 
    this.dialog.open(SettingsComponent, {
-     height: '500px',
-     width: '800px',
+     height: '80%',
+     width: '60%',
      data: {
        getTable: this.loadTable,
        table: this.currentTable
