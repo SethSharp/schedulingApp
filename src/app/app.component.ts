@@ -60,6 +60,8 @@ export class AppComponent implements OnInit {
       const dialogRef = this.dialog.open(GetTimetableComponent, {
         height: (this.getDialogHeight(this.tables)/10)+"%",
         width: '30%',
+        minWidth: "400px",
+        minHeight: "300px",
         data: {
           tables: this.tables
         }
@@ -139,8 +141,10 @@ export class AppComponent implements OnInit {
     this.dialog.open(ToDoListComponent, {
       width: '50%',
       height: '80%',
+      minWidth: "400px",
       data: {
-        title: this.dayTitles[new Date().getDay()-1],
+        tableContent: this.days,
+        table: this.currentTable
       },
     });
   }
