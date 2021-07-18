@@ -33,6 +33,7 @@ export class ToDoListComponent implements OnInit {
     private gServ: GeneralFunctionsService
   ) {
     this.pos = new Date().getDay()-1
+    if (this.pos == -1) this.pos = 6
     this.selectedDay = this.days[this.pos]
   }
 
@@ -151,17 +152,26 @@ export class ToDoListComponent implements OnInit {
     })
   }
 
-  moveSession(i:number) {
-    // get the identifier for the next day (thisday+1)
-    // Then update that day adding this item then updating
-    // the current list by removing it
-
-    // Don't need to take 1, as that would be today
-    let tomorrow = this.days[new Date().getDay()]
+  moveSession(i:number) {4
+    // Dont always move to tomorrow the day before
+    // Need to find the day its on
+    let pos = this.findDayInList(this.selectedDay)
+    // Then find the next day
+    let tomorrow = this.days[pos+1]
+    if (pos == this.days.length-1) { // End of the week
+      tomorrow = this.days[0]
+    }
     this.sessionServ.addItem(this.items[i], tomorrow).subscribe(d=> {
       this.sessionServ.deleteItem(i, this.selectedDay).subscribe(t=> {
         this.items.splice(i,1)
       })
     })
+  }
+
+  findDayInList(day:string) {
+    for (let i = 0; i < this.days.length; i++) {
+      if (this.days[i] == day) return i
+    }
+    return 0
   }
 }

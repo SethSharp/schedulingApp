@@ -39,4 +39,11 @@ export class DayTableComponent implements OnInit {
     return s.colour;
   }
 
+  getDesc(cat:string) {
+    if (cat == "Blank") {
+      return ''
+    }
+    return cat
+  }
+
 }

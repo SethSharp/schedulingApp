@@ -101,6 +101,7 @@ export class SessionService {
   }
 
   moveItem(i:number, day:string) {
+    console.log("Anything")
     return this.http.post(`${this.uri}/moveItem/${day}`, {i:i})
   }
 

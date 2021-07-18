@@ -103,6 +103,7 @@ export class ViewSessionComponent implements OnInit {
         let d = day[i+1]  // There is a session after the edited one
         // So its start needs to be reset
         if (d.title == '') {
+          console.log('1');
           d.start = newData.end
           if (this.gServ.xIsEqualToY(newData.end, this.height)) {
             day.pop()
@@ -110,6 +111,7 @@ export class ViewSessionComponent implements OnInit {
             d.start = newData.end
           }
         } else {
+          console.log('2')
           // Have a session
           if (this.gServ.xIsEqualToY(newData.end, d.start)) { // End of edit is start of next
             day.splice(i+1,1)
@@ -135,7 +137,8 @@ export class ViewSessionComponent implements OnInit {
             day.splice(0,1)
           } else {
             // The break end time is set to the start of the new
-            day.splice(i-1,1)
+            // day.splice(i-1,1)
+            day[i-1].end = newData.start
           }
         } else {
           // There is a session, so need to set the end to the start of the new

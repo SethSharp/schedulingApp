@@ -12,12 +12,15 @@ import { SessionDialogComponent } from './session-dialog/session-dialog.componen
 })
 export class WeeklyTableService {
   rowHeight = 100;
+  start = 8
   defaultT = 'Main';
   endTime = this.gServ.endTime;
   startTime = this.gServ.startTime;
   tempSession = new Session('', this.startTime, this.endTime);
 
   times = [
+    '6:00',
+    '7:00',
     '8:00',
     '9:00',
     '10:00',
@@ -63,7 +66,7 @@ export class WeeklyTableService {
   ) {}
 
   timeToPx(s: number) {
-    return (s - 8) * this.rowHeight;
+    return (s - this.start) * this.rowHeight;
   }
 
   getAmount = (a: Date, i: number, day: any) => {
@@ -203,6 +206,10 @@ export class WeeklyTableService {
         e: days[i].end,
         table: table,
       },
+    });
+    dialogRef.backdropClick().subscribe(() => {
+      console.log('Resetting title');
+      days[i].title = '';
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.tempSession = result;

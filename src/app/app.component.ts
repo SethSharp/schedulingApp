@@ -150,22 +150,11 @@ export class AppComponent implements OnInit {
   }
 
   openSettings() {
-    // Open a dialog
-    /*
-      - Edit categories (title, colour)
-        + Will affect existing sessions with set cats, so will need to edit them all
-        + Possibly integrate that loading thing from angular mat
-        + Basically go through each session and if the cat is the old cat, then change
-        + Then use that existing function to add the entire week back to the data base...
-
-      - Default table
-        + There can be a mini table (turn table into component...), to
-    */
-
-
    this.dialog.open(SettingsComponent, {
      height: '80%',
      width: '60%',
+     minWidth: "400px",
+     minHeight: "300px",
      data: {
        getTable: this.loadTable,
        table: this.currentTable

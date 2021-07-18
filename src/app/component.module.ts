@@ -12,6 +12,8 @@ import { ToDoListComponent } from './to-do-list/to-do-list.component';
 import { EditItemComponent } from './edit-item/edit-item.component';
 import { SettingsComponent } from './settings/settings.component';
 import { WeekTableComponent } from './week-table/week-table.component';
+import { ItemSessionComponent } from './item-session/item-session.component';
+
 @NgModule({
   declarations: [
     DayTableComponent,
@@ -23,6 +25,7 @@ import { WeekTableComponent } from './week-table/week-table.component';
     EditItemComponent,
     SettingsComponent,
     WeekTableComponent,
+    ItemSessionComponent,
   ],
   exports: [
     DayTableComponent,
@@ -34,6 +37,7 @@ import { WeekTableComponent } from './week-table/week-table.component';
     EditItemComponent,
     SettingsComponent,
     WeekTableComponent,
+    ItemSessionComponent,
   ],
   imports: [CommonModule, FormsModule, MaterialModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

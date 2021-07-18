@@ -4,7 +4,7 @@
   </mat-grid-tile>
 </mat-grid-list>
 
-<mat-grid-list cols="15" rowHeight="93.75rem">
+<mat-grid-list cols="15" rowHeight="1700px">
   <mat-grid-tile [colspan]="1">
     <div class="internalMatGrid">
       <mat-grid-list cols="1" rowHeight="6.25rem" *ngFor="let time of times">
@@ -16,7 +16,7 @@
   </mat-grid-tile>
 
   <mat-grid-tile *ngFor="let d of days; let j = index" [colspan]="2">
-    <div style="width: 95%; height: 100%">
+    <div style="width: 95%; height: 100%; margin-top: 400px">
       <app-day-table
         [day]="d.sessions"
         [title]="table"

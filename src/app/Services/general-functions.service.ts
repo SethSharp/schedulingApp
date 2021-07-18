@@ -8,7 +8,7 @@ import { EditItemComponent } from '../edit-item/edit-item.component';
 export class GeneralFunctionsService {
   constructor(private snack: MatSnackBar, private dialog: MatDialog) {}
 
-  startTime = this.setTime(8, 0);
+  startTime = this.setTime(6, 0);
   endTime = this.setTime(23, 0);
   rowHeight = 100;
   dayTitles = [
