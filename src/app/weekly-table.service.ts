@@ -5,7 +5,7 @@ import { ViewSessionComponent } from './view-session/view-session.component';
 import { GeneralFunctionsService } from './Services/general-functions.service';
 import { SessionService } from './session.service';
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
-
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -187,11 +187,34 @@ export class WeeklyTableService {
     day[i] = blank;
   }
 
-  // When the user clicks on a blank session. It will create a new one
+  categories:any;
+  observable = new Observable(sub => {
+    if (this.categories == undefined) {
+      this.sessionServ.getCategories().subscribe((d) => {
+        this.categories = d;
+        this.categories.push({ title: 'Custom' });
+        console.log('Getting categories');
+        sub.next()
+      });
+    } else {
+      console.log("Alredy have categories")
+      sub.next()
+    }
+  })
+
   openSessionDialog = (days: any, dayTitle: string, i: number, table:string) => {
-    const dialogRef = this.dialog.open(SessionDialogComponent, {
-      height: '90%',
-      width: '40%',
+    this.observable.subscribe(() => {
+      console.log(this.categories)
+      this.open(days, dayTitle, i, table)
+    })
+  }
+
+  open(days: any, dayTitle: string, i: number, table:string) {
+    let dialogRef = this.dialog.open(SessionDialogComponent, {
+      height: '60%',
+      width: '30%',
+      minHeight: "400px",
+      minWidth: "300px",
       data: {
         sessions: days,
         dayTitle: dayTitle,
@@ -199,7 +222,12 @@ export class WeeklyTableService {
         s: days[i].start,
         e: days[i].end,
         table: table,
+        categories: this.categories
       },
+    });
+    dialogRef.backdropClick().subscribe(() => {
+      console.log('Resetting title');
+      days[i].title = '';
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.tempSession = result;
