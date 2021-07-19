@@ -1,3 +1,4 @@
+import { WeeklyTableService } from './../weekly-table.service';
 import { EditItemComponent } from './../edit-item/edit-item.component';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -26,7 +27,7 @@ export class ToDoListComponent implements OnInit {
       title: string;
     },
     private sessionServ: SessionService,
-    private dialog: MatDialog,
+    private weeklyS: WeeklyTableService,
     private gServ: GeneralFunctionsService
   ) {
     this.selectedDay = this.data.title
@@ -52,8 +53,9 @@ export class ToDoListComponent implements OnInit {
           this.createItems(l)
         })
       } else {
-        this.sessionServ.retrieveList(t).subscribe((d) => {
-          this.createItems(d)
+        this.weeklyS.currentDay = this.selectedDay
+        this.weeklyS.toDoItemObservable.subscribe(()=>{
+          this.createItems(this.weeklyS.currentDayItems)
         })
       }
     });

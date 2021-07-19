@@ -6,6 +6,7 @@ import { GeneralFunctionsService } from './Services/general-functions.service';
 import { SessionService } from './session.service';
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
 import { Observable } from 'rxjs';
+import { IgxTabItemDirective } from 'igniteui-angular';
 
 
 @Injectable({
@@ -62,6 +63,35 @@ export class WeeklyTableService {
     private gServ: GeneralFunctionsService,
     private sessionServ: SessionService
   ) {}
+
+  categories:any;
+  observable = new Observable(sub => {
+    if (this.categories == undefined) {
+      this.sessionServ.getCategories().subscribe((d) => {
+        this.categories = d;
+        this.categories.push({ title: 'Custom' });
+        console.log('Getting categories');
+        sub.next()
+      });
+    } else {
+      console.log("Alredy have categories")
+      sub.next()
+    }
+  })
+
+
+  currentDayItems:any;
+  currentDay:string='';
+  toDoItemObservable = new Observable(sub => {
+    if (this.currentDayItems == undefined) {
+      this.sessionServ.retrieveList(this.currentDay).subscribe((items) => {
+        this.currentDayItems = items
+        sub.next()
+      })
+    } else {
+      sub.next()
+    }
+  })
 
   timeToPx(s: number) {
     return (s - 8) * this.rowHeight;
@@ -186,21 +216,6 @@ export class WeeklyTableService {
     } catch {}
     day[i] = blank;
   }
-
-  categories:any;
-  observable = new Observable(sub => {
-    if (this.categories == undefined) {
-      this.sessionServ.getCategories().subscribe((d) => {
-        this.categories = d;
-        this.categories.push({ title: 'Custom' });
-        console.log('Getting categories');
-        sub.next()
-      });
-    } else {
-      console.log("Alredy have categories")
-      sub.next()
-    }
-  })
 
   openSessionDialog = (days: any, dayTitle: string, i: number, table:string) => {
     this.observable.subscribe(() => {
