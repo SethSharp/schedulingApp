@@ -58,10 +58,9 @@ export class ToDoListComponent implements OnInit {
           this.createItems(l)
         })
       } else {
-        this.weeklyS.currentDay = this.selectedDay
-        this.weeklyS.toDoItemObservable.subscribe(()=>{
-          this.createItems(this.weeklyS.currentDayItems)
-        })
+        this.sessionServ.retrieveList(t).subscribe((d) => {
+          this.createItems(d);
+        });
       }
     });
   }

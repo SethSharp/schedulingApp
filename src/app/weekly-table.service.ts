@@ -71,15 +71,12 @@ export class WeeklyTableService {
       this.sessionServ.getCategories().subscribe((d) => {
         this.categories = d;
         this.categories.push({ title: 'Custom' });
-        console.log('Getting categories');
         sub.next()
       });
     } else {
-      console.log("Alredy have categories")
       sub.next()
     }
   })
-
 
   currentDayItems:any;
   currentDay:string='';
@@ -219,9 +216,9 @@ export class WeeklyTableService {
     } catch {}
     day[i] = blank;
   }
+
   openSessionDialog = (days: any, dayTitle: string, i: number, table:string) => {
     this.observable.subscribe(() => {
-      console.log(this.categories)
       this.open(days, dayTitle, i, table)
     })
   }
@@ -243,7 +240,6 @@ export class WeeklyTableService {
       },
     });
     dialogRef.backdropClick().subscribe(() => {
-      console.log('Resetting title');
       days[i].title = '';
     });
     dialogRef.afterClosed().subscribe((result) => {

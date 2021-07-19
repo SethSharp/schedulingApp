@@ -55,15 +55,9 @@ export class SessionDialogComponent implements OnInit {
     this.selectedCat = this.data.session.category;
     this.title = this.data.session.title;
     this.color = this.data.session.colour;
-<<<<<<< HEAD
-=======
-    this.categories = this.data.categories
->>>>>>> observable
   }
 
   ngOnInit(): void {}
-
-
 
   submitSessionBlock() {
     if (this.checkRanges()) {
