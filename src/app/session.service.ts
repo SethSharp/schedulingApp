@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Session } from './session';
 import { GeneralFunctionsService } from "./Services/general-functions.service"
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -41,8 +42,8 @@ export class SessionService {
     return this.http.post(`${this.uri}/createTable`, userSchema);
   }
 
-  setWeek(newWeek:any, table:string) {
-    return this.http.post(`${this.uri}/updateWeek/${table}`, newWeek)
+  setWeek(newWeek: any, table: string) {
+    return this.http.post(`${this.uri}/updateWeek/${table}`, newWeek);
   }
 
   updateDay(newDay: any, title: string, table: string) {
@@ -64,65 +65,67 @@ export class SessionService {
     return this.http.delete(`${this.uri}/delete/${t}`);
   }
 
-
   // To Do List functions
-  listExists(id:any) {
-    return this.http.get(`${this.uri}/listExists/${id}`)
+  listExists(id: any) {
+    return this.http.get(`${this.uri}/listExists/${id}`);
   }
 
-  createList(l:string) {
+  createList(l: string) {
     let list = {
       title: l,
-      completed: [new Item('Testing completed items', "Complete items")],
-      inCompleted: [new Item('Testing in complete', "In complete items")]
-    }
-    return this.http.post(`${this.uri}/createList`, list)
+      completed: [new Item('Testing completed items', 'Complete items')],
+      inCompleted: [new Item('Testing in complete', 'In complete items')],
+    };
+    return this.http.post(`${this.uri}/createList`, list);
   }
 
-  retrieveList(title:string) {
+  retrieveList(title: string) {
     return this.http.get(`${this.uri}/getToDoList/${title}`);
   }
 
-  addItem(item:any, id:any) {
-    return this.http.post(`${this.uri}/addItem/${id}`, item)
+  addItem(item: any, id: any) {
+    return this.http.post(`${this.uri}/addItem/${id}`, item);
   }
 
-  updateItem(newItem:any, i:number, day:string) {
+  updateItem(newItem: any, i: number, day: string) {
     return this.http.post(`${this.uri}/updateItem/${day}`, {
       updatedItem: newItem,
-      pos: i
-    })
+      pos: i,
+    });
   }
 
-  completeItem(i:number, day:string) {
+  completeItem(i: number, day: string) {
     return this.http.post(`${this.uri}/completeItem/${day}`, {
-      i:i
-    })
+      i: i,
+    });
   }
 
   moveItem(i:number, day:string) {
-    console.log("Anything")
     return this.http.post(`${this.uri}/moveItem/${day}`, {i:i})
   }
 
-  deleteItem(i:number, day:string) {
-    return this.http.post(`${this.uri}/deleteItem/${day}`, {i:i})
+  deleteItem(i: number, day: string) {
+    return this.http.post(`${this.uri}/deleteItem/${day}`, { i: i });
   }
 
-  // Category
+  // Categories
+
   getCategories() {
-    return this.http.get(`${this.uri}/getCategories`)
+    return this.http.get(`${this.uri}/getCategories`);
   }
 
-  addCategory(category:any) {
-    return this.http.post(`${this.uri}/addCategory`, category)
+  addCategory(category: any) {
+    return this.http.post(`${this.uri}/addCategory`, category);
   }
 
-  editCategory(oldC:any,newC:any) {
-    return this.http.post(`${this.uri}/editCategory`, { o: oldC.title, n: newC });
+  editCategory(oldC: any, newC: any) {
+    return this.http.post(`${this.uri}/editCategory`, {
+      o: oldC.title,
+      n: newC,
+    });
   }
 
-  deleteCategory(c:any) {
-    return this.http.delete(`${this.uri}/deleteCategory/${c}`)
+  deleteCategory(c: any) {
+    return this.http.delete(`${this.uri}/deleteCategory/${c}`);
   }
 }

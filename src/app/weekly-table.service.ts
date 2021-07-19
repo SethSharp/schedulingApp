@@ -7,7 +7,6 @@ import { SessionService } from './session.service';
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
 import { Observable } from 'rxjs';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -65,6 +64,35 @@ export class WeeklyTableService {
     private gServ: GeneralFunctionsService,
     private sessionServ: SessionService
   ) {}
+
+  categories:any;
+  observable = new Observable(sub => {
+    if (this.categories == undefined) {
+      this.sessionServ.getCategories().subscribe((d) => {
+        this.categories = d;
+        this.categories.push({ title: 'Custom' });
+        console.log('Getting categories');
+        sub.next()
+      });
+    } else {
+      console.log("Alredy have categories")
+      sub.next()
+    }
+  })
+
+
+  currentDayItems:any;
+  currentDay:string='';
+  toDoItemObservable = new Observable(sub => {
+    if (this.currentDayItems == undefined) {
+      this.sessionServ.retrieveList(this.currentDay).subscribe((items) => {
+        this.currentDayItems = items
+        sub.next()
+      })
+    } else {
+      sub.next()
+    }
+  })
 
   timeToPx(s: number) {
     return (s - this.start) * this.rowHeight;
@@ -191,23 +219,9 @@ export class WeeklyTableService {
     } catch {}
     day[i] = blank;
   }
-
-  categories:any;
-  observable = new Observable(sub => {
-    if (this.categories == undefined) {
-      this.sessionServ.getCategories().subscribe((d) => {
-        this.categories = d;
-        this.categories.push({ title: 'Custom' });
-        sub.next()
-      });
-    } else {
-      sub.next()
-    }
-
-  })
-  // When the user clicks on a blank session. It will create a new one
   openSessionDialog = (days: any, dayTitle: string, i: number, table:string) => {
     this.observable.subscribe(() => {
+      console.log(this.categories)
       this.open(days, dayTitle, i, table)
     })
   }

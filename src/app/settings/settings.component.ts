@@ -34,8 +34,8 @@ export class SettingsComponent implements OnInit {
   openSessionDialog = this.weeklyS.openSessionDialog;
 
   ngOnInit(): void {
-    this.sessionServ.getCategories().subscribe((c) => {
-      this.categories = c;
+    this.weeklyS.observable.subscribe((d) => {
+      this.categories = this.weeklyS.categories;
     });
   }
 
