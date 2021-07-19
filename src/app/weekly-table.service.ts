@@ -5,6 +5,7 @@ import { ViewSessionComponent } from './view-session/view-session.component';
 import { GeneralFunctionsService } from './Services/general-functions.service';
 import { SessionService } from './session.service';
 import { SessionDialogComponent } from './session-dialog/session-dialog.component';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -191,9 +192,28 @@ export class WeeklyTableService {
     day[i] = blank;
   }
 
+  categories:any;
+  observable = new Observable(sub => {
+    if (this.categories == undefined) {
+      this.sessionServ.getCategories().subscribe((d) => {
+        this.categories = d;
+        this.categories.push({ title: 'Custom' });
+        sub.next()
+      });
+    } else {
+      sub.next()
+    }
+
+  })
   // When the user clicks on a blank session. It will create a new one
   openSessionDialog = (days: any, dayTitle: string, i: number, table:string) => {
-    const dialogRef = this.dialog.open(SessionDialogComponent, {
+    this.observable.subscribe(() => {
+      this.open(days, dayTitle, i, table)
+    })
+  }
+
+  open(days: any, dayTitle: string, i: number, table:string) {
+    let dialogRef = this.dialog.open(SessionDialogComponent, {
       height: '60%',
       width: '30%',
       minHeight: "400px",
@@ -205,6 +225,7 @@ export class WeeklyTableService {
         s: days[i].start,
         e: days[i].end,
         table: table,
+        categories: this.categories
       },
     });
     dialogRef.backdropClick().subscribe(() => {

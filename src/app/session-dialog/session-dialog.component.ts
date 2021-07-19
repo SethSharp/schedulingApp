@@ -35,11 +35,13 @@ export class SessionDialogComponent implements OnInit {
       s: Date;
       e: Date;
       table: string;
+      categories: any;
     },
     private gService: GeneralFunctionsService,
     private dialog: MatDialog,
     private sessionServ: SessionService
   ) {
+    this.categories = this.data.categories
     this.startTime = this.data.session.start;
     this.endTime = this.data.session.end;
     this.min = this.data.s;
@@ -49,10 +51,6 @@ export class SessionDialogComponent implements OnInit {
     this.selectedCat = this.data.session.category;
     this.title = this.data.session.title;
     this.color = this.data.session.colour;
-    this.sessionServ.getCategories().subscribe(d => {
-      this.categories = d
-      this.categories.push({title:'Custom'})
-    })
   }
 
   ngOnInit(): void {}
