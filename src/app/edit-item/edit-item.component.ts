@@ -1,7 +1,7 @@
 import { Item } from './../item';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { SessionService } from '../session.service';
+import { SessionService } from '../Services/Session/session.service';
 @Component({
   selector: 'app-edit-item',
   templateUrl: './edit-item.component.html',

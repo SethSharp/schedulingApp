@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Session } from './session';
-import { MatDialog } from '@angular/material/dialog';
-import { ViewSessionComponent } from './view-session/view-session.component';
-import { GeneralFunctionsService } from './Services/general-functions.service';
-import { SessionService } from './session.service';
-import { SessionDialogComponent } from './session-dialog/session-dialog.component';
 import { Observable } from 'rxjs';
+import { Session } from 'src/app/session';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewSessionComponent } from 'src/app/view-session/view-session.component';
+import { GeneralFunctionsService } from '../GeneralFunction/general-functions.service';
+import { SessionService } from '../Session/session.service';
+import { SessionDialogComponent } from 'src/app/session-dialog/session-dialog.component';
+
 
 @Injectable({
   providedIn: 'root',

@@ -1,9 +1,8 @@
 
-import { Component, OnInit, Inject, InjectionToken } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Session } from "../session"
-import { SessionService } from '../session.service';
-import { WeeklyTableService } from '../weekly-table.service';
+import { Session } from "../session";
+import { WeeklyTableService } from '../Services/WeeklyTable/weekly-table.service';
 @Component({
   selector: 'app-item-session',
   templateUrl: './item-session.component.html',

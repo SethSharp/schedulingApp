@@ -1,6 +1,6 @@
-import { GeneralFunctionsService } from './../Services/general-functions.service';
+import { GeneralFunctionsService } from '../Services/GeneralFunction/general-functions.service';
 import { Component, OnInit, Inject } from '@angular/core';
-import { SessionService } from '../session.service';
+import { SessionService } from '../Services/Session/session.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({

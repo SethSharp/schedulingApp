@@ -1,9 +1,11 @@
-import { WeeklyTableService } from './../weekly-table.service';
 import { Session } from './../session';
 import { Component, OnInit, Inject } from '@angular/core';
-import { SessionService } from '../session.service';
-import { GeneralFunctionsService } from '../Services/general-functions.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { WeeklyTableService } from '../Services/WeeklyTable/weekly-table.service';
+import { SessionService } from '../Services/Session/session.service';
+import { GeneralFunctionsService } from '../Services/GeneralFunction/general-functions.service';
+
 
 @Component({
   selector: 'app-settings',

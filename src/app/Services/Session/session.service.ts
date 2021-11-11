@@ -1,9 +1,8 @@
-import { Item } from './item';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Session } from './session';
-import { GeneralFunctionsService } from "./Services/general-functions.service"
-
+import { Session } from 'src/app/session';
+import { Item } from 'src/app/item';
+import { GeneralFunctionsService } from "../GeneralFunction/general-functions.service"
 
 @Injectable({
   providedIn: 'root',

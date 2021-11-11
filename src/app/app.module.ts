@@ -9,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { ComponentModule } from './component.module';
 import { MaterialModule } from './material.module';
-import { MatTimepickerModule } from 'mat-timepicker';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -18,9 +18,9 @@ import { MatTimepickerModule } from 'mat-timepicker';
     NoopAnimationsModule,
     ComponentModule,
     MaterialModule,
-    MatTimepickerModule,
     HttpClientModule
   ],
+  exports:[],
   providers: [],
   entryComponents: [],
   bootstrap: [AppComponent],

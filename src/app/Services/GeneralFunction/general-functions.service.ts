@@ -1,7 +1,7 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EditItemComponent } from '../edit-item/edit-item.component';
+import { EditItemComponent } from 'src/app/edit-item/edit-item.component';
 @Injectable({
   providedIn: 'root',
 })

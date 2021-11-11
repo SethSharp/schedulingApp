@@ -5,7 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionDialogComponent } from '../session-dialog/session-dialog.component';
 import { Session } from './../session';
-import { GeneralFunctionsService } from '../Services/general-functions.service';
+import { GeneralFunctionsService } from '../Services/GeneralFunction/general-functions.service';
 
 @Component({
   selector: 'app-view-session',

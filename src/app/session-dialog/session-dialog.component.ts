@@ -1,13 +1,11 @@
 import { Session } from './../session';
-import { GeneralFunctionsService } from './../Services/general-functions.service';
 
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA , MatDialogRef } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
-import { SessionService } from '../session.service';
-import { WeeklyTableService } from '../weekly-table.service';
-import { Observable } from 'rxjs';
-
+import { SessionService } from '../Services/Session/session.service';
+import { WeeklyTableService } from '../Services/WeeklyTable/weekly-table.service';
+import { GeneralFunctionsService } from '../Services/GeneralFunction/general-functions.service';
 
 @Component({
   selector: 'app-session-dialog',

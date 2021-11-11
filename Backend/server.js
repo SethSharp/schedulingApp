@@ -27,7 +27,6 @@ let tableSchema = {
 
 const Table = mongoose.model("tables", tableSchema)
 
-
 app.get("/tableExists/:id", (req, res) => {
   Table.findOne({name:req.params.id}).then(r => {
     if (r) {

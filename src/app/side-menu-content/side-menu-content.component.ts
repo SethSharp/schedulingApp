@@ -1,5 +1,5 @@
 import { Session } from './../session';
-import { GeneralFunctionsService } from '../Services/general-functions.service';
+import { GeneralFunctionsService } from '../Services/GeneralFunction/general-functions.service';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({

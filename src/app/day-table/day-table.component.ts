@@ -1,6 +1,6 @@
 import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { WeeklyTableService } from '../weekly-table.service';
+import { WeeklyTableService } from '../Services/WeeklyTable/weekly-table.service';
 @Component({
   selector: 'app-day-table',
   templateUrl: './day-table.component.html',
