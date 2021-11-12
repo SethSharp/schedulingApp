@@ -25,25 +25,17 @@ export class DayTableComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  getFunction(blank: string, i: number, day: any) {
+  getFunction(session: string, i: number, day: any) {
     let x = this.days[this.dayPos];
     // Tests if blank
-    if (blank=='') {
+    if (session == '') {
       return this.insertSession(day, x, i, this.title);
     }
     return this.viewSession(day, i, x, this.title);
   }
 
   getColour(s:any) {
-    if (s.category == "Blank") return "lightgrey"
-    return s.colour;
-  }
-
-  getDesc(cat:string) {
-    if (cat == "Blank") {
-      return ''
-    }
-    return cat
+    return (s.category == "Blank") ? "lightgrey":s.colour;
   }
 
 }

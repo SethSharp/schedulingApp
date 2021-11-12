@@ -1,8 +1,21 @@
-<h3>
-  Current table: {{currentTable}}
-  <button mat-button (click)="changeTable()"> Change table </button>
+
+<div class="header-content">
+
+  <mat-form-field class="test">
+    <mat-label> {{currentTable}} </mat-label>
+      <mat-select>
+      <mat-option>
+        <button mat-button (click)="loadTable('Main')"> MAIN </button>
+      </mat-option>
+      <mat-option>
+        <button mat-button (click)="loadTable('Default')"> DEFAULT </button>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <button mat-button (click)="openSettings()"> Settings </button>
-</h3>
+
+</div>
 
 <app-week-table
   [days]="days"

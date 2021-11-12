@@ -1,17 +1,20 @@
 
 <div style="text-align: center;">
-  <h1> Time table selection and creation</h1>
+  <!-- <h1> Time table selection and creation</h1>
 
   <mat-form-field float appearance="outline">
     <mat-label> Table name </mat-label>
     <input matInput type="text" placeholder="Name..." [(ngModel)]="table" />
   </mat-form-field>
 
-  <button mat-button (click)="submitTable()"> Submit  </button>
+  <button mat-button (click)="submitTable()"> Submit  </button> -->
 
   <br><br>
 
-  <mat-accordion  *ngFor="let table of tables; let i = index" multi=false style="text-align: left;">
+  <button mat-button (click)="submitTable('Main')"> MAIN </button>
+  <button mat-button (click)="submitTable('default')"> DEFAULT </button>
+
+  <!-- <mat-accordion  *ngFor="let table of tables; let i = index" multi=false style="text-align: left;">
     <mat-expansion-panel >
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -42,7 +45,7 @@
 
       </span>
     </mat-expansion-panel>
-  </mat-accordion>
+  </mat-accordion> -->
 
 </div>
 

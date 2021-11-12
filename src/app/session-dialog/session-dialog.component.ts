@@ -119,9 +119,7 @@ export class SessionDialogComponent implements OnInit {
           this.setCat({title:d.a, colour:d.b})
           this.categories.push({title:d.a, colour:d.a})
         })
-      } catch {
-        // console.log("Exited without submitting")
-      }
+      } catch {}
     });
   }
 }

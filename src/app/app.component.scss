@@ -1,3 +1,10 @@
-.mat-grid-tile {
-  border: solid 1px black;
+.header-content {
+  background-color: lightgray;
+  height: 50px;
+  padding-left: 4px;
+}
+
+h3, button {
+  margin-top: 5px;
+  display: inline-block;
 }

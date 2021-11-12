@@ -71,7 +71,6 @@ export class WeeklyTableService {
     if (this.categories == undefined) {
       this.sessionServ.getCategories().subscribe((d) => {
         this.categories = d;
-        this.categories.push({ title: 'Custom' });
         sub.next()
       });
     } else {
@@ -81,16 +80,6 @@ export class WeeklyTableService {
 
   currentDayItems:any;
   currentDay:string='';
-  toDoItemObservable = new Observable(sub => {
-    if (this.currentDayItems == undefined) {
-      this.sessionServ.retrieveList(this.currentDay).subscribe((items) => {
-        this.currentDayItems = items
-        sub.next()
-      })
-    } else {
-      sub.next()
-    }
-  })
 
   timeToPx(s: number) {
     return (s - this.start) * this.rowHeight;
@@ -121,10 +110,10 @@ export class WeeklyTableService {
 
   viewEditSession = (day: any, i: number, dayTitle: string, table:string) => {
     const dialogRef = this.dialog.open(ViewSessionComponent, {
-      height: '55%',
-      width: '30%',
-      minWidth: "200px",
-      minHeight: "250px",
+      height: '10%',
+      width: '25%',
+      minHeight: '400px',
+      minWidth: '300px',
       data: { day: day, i: i, insertData: this.insertData, t: dayTitle },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -227,7 +216,7 @@ export class WeeklyTableService {
   open(days: any, dayTitle: string, i: number, table:string) {
     let dialogRef = this.dialog.open(SessionDialogComponent, {
       height: '60%',
-      width: '30%',
+      width: '35%',
       minHeight: "400px",
       minWidth: "300px",
       data: {

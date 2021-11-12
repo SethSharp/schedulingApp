@@ -1,5 +1,5 @@
 <h1>Settings</h1>
-<h3> All settings will apply to the currently selected table</h3>
+
 <mat-card>
   <mat-card-header>
     <mat-card-title> Categories </mat-card-title>
@@ -14,25 +14,13 @@
       </mat-expansion-panel-header>
 
         <span *ngFor="let cat of categories; let i = index">
-          <h3 [style.color]="cat.colour" > {{cat.title}}
-
+          <button mat-button (click)="editCategory(cat.title)" > {{cat.title}}</button>
             <button
-            mat-button
-            color="primary"
-            (click)="editCategory(cat)"
-          >
-            Edit
-          </button>
-
-          <button
-            mat-button
-            color="warn"
-            (click)="deleteCategory(cat,i)"
-          >
-            Delete
-          </button>
-          </h3>
-
+              mat-button
+              color="warn"
+              (click)="deleteCategory(cat,i)">
+              Delete
+            </button><br>
         </span>
 
     </mat-expansion-panel>
@@ -44,18 +32,12 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title> Reset week to default </mat-card-title>
-    <mat-card-subtitle> Resetting the week will set the currently selected table to a table
-                        of your choice (Input). Example uses:
-                        - Weekly classes
-                        - Changing work schedules
-                        Basically to clear up the sessions in-between these commitments
-                        that are on a weekly basis
+    <mat-card-subtitle>
+      This allows you to reset the table to the default table. Allowing tasks that repeat each week
+      to be automatically added (In the default table). Instead of adding the tasks every week.
     </mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content>
-    <input matInput type="text" #table placeholder="Table to replace '{{data.table}}' with...">
-    <button mat-button (click)="resetToDefault(table.value)" color="warn" > Reset </button>
-  </mat-card-content>
+  <button mat-button (click)="resetToDefault('Default')" color="warn" > Reset </button>
 </mat-card>
 
 <br>

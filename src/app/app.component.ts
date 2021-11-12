@@ -7,7 +7,6 @@ import { WeeklyTableService } from './Services/WeeklyTable/weekly-table.service'
 import { SessionService } from './Services/Session/session.service';
 import { GeneralFunctionsService } from './Services/GeneralFunction/general-functions.service';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -26,11 +25,10 @@ export class AppComponent implements OnInit {
   startTime = this.gServ.startTime;
   endTime = this.gServ.endTime;
 
-  days = this.weeklyS.days;
+  days = this.weeklyS.days; // default to empty arrays as each day
 
   dbContent: any;
-  defaultT = 'Main';
-  currentTable = '';
+  currentTable = "Main";
   tables: any;
   title = 'scheduling-app';
 
@@ -45,52 +43,16 @@ export class AppComponent implements OnInit {
   insertData = this.weeklyS.insertData;
   openSessionDialog = this.weeklyS.openSessionDialog;
 
-  async ngOnInit() {
-    this.changeTable();
-  }
+  ngOnInit() { this.loadTable("Main");}
 
-  changeTable = (days: any = this.days) => {
-    this.sessionServ.retrieveAllTables().subscribe((d) => {
-      this.tables = d;
-      let defaulted = false;
-      const dialogRef = this.dialog.open(GetTimetableComponent, {
-        height: this.getDialogHeight(this.tables) / 10 + '%',
-        width: '30%',
-        minWidth: '400px',
-        minHeight: '300px',
-        data: {
-          tables: this.tables,
-        },
-      });
-      dialogRef.backdropClick().subscribe(() => {
-        this.currentTable = this.defaultT;
-        defaulted = true;
-      });
-      dialogRef.afterClosed().subscribe((t) => {
-        if (defaulted == false) {
-          this.currentTable = t;
-        }
-        this.loadTable(this.currentTable, days);
-      });
-    });
-  };
-
-  getDialogHeight(t: any) {
-    let d = 350;
-    if (t.length > 5) {
-      return d + 5 * 50;
-    }
-    return d + t.length * 50;
-  }
-
-  loadTable = (t: string, days: any) => {
+  loadTable = (t: string) => {
     this.sessionServ.collectionExists(t).subscribe((d) => {
       if (!d) {
-        this.sessionServ.createTable(t).subscribe((f) => {
-          this.retrieveTable(t, days);
+        this.sessionServ.createTable(t).subscribe(() => {
+          this.retrieveTable(t, this.days);
         });
       } else {
-        this.retrieveTable(t, days);
+        this.retrieveTable(t, this.days);
       }
     });
   };
