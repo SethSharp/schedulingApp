@@ -1,4 +1,5 @@
 
+<!-- Row headers, Time | Mon | ... -->
 <mat-grid-list cols="15" rowHeight="3.125rem">
   <mat-grid-tile *ngFor="let head of headerContent" [colspan]="head.s">
       {{ head.t }}
@@ -6,11 +7,13 @@
 </mat-grid-list>
 
 
-
+<!--  -->
 <mat-grid-list cols="15" rowHeight="1700px">
+
+  <!-- Row headers (Going down), each time period -->
   <mat-grid-tile [colspan]="1">
     <div class="internalMatGrid">
-      <mat-grid-list class="times" cols="1" rowHeight="6.25rem" *ngFor="let time of times">
+      <mat-grid-list class="times" cols="1" rowHeight="6rem" *ngFor="let time of times">
         <mat-grid-tile [colspan]="1">
           {{ time }}
         </mat-grid-tile>
@@ -20,8 +23,9 @@
 
   <mat-grid-tile *ngFor="let d of days; let j = index" [colspan]="2">
     <div style="width: 95%; height: 100%; margin-top: 400px">
+      <!-- Sends sessions in days to component -->
       <app-day-table
-        [day]="d.sessions"
+        [day]="d"
         [title]="table"
         [dayPos]="j">
       </app-day-table>

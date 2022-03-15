@@ -20,6 +20,7 @@ export class WeeklyTableService {
   tempSession = new Session('', this.startTime, this.endTime);
 
   times = [
+    '5:00',
     '6:00',
     '7:00',
     '8:00',
@@ -85,15 +86,17 @@ export class WeeklyTableService {
     return (s - this.start) * this.rowHeight;
   }
 
+  // Gets the point at which the next session starts (Compared to a prev session/start of day)
   getAmount = (a: Date, i: number, day: any) => {
+    console.log(day)
+    if (day[i].title == "") return "100";
     // Changed to start time
     let level = this.timeToPx(a.getHours());
     let t = 0;
     if (i >= 1) {
       // Gets last end position
-
       // Can be changed to the end time
-      t = this.timeToPx(day[i - 1].start) + day[i - 1].len;
+      t = this.timeToPx(day[i - 1].end) + day[i - 1].len;
     }
     let f = (level - t).toString();
     return f;
@@ -105,6 +108,7 @@ export class WeeklyTableService {
     let m = s.end.getMinutes() - s.start.getMinutes();
     let y = Math.ceil(100 / (60 / m));
     let x = (h + y / 100) * 100;
+    console.log(x);
     return x.toString();
   };
 
@@ -214,6 +218,7 @@ export class WeeklyTableService {
   }
 
   open(days: any, dayTitle: string, i: number, table:string) {
+    console.log(days[i]);
     let dialogRef = this.dialog.open(SessionDialogComponent, {
       height: '60%',
       width: '35%',

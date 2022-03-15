@@ -11,19 +11,18 @@ import { ComponentModule } from './component.module';
 import { MaterialModule } from './material.module';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NoopAnimationsModule,
-    ComponentModule,
-    MaterialModule,
-    HttpClientModule
-  ],
-  exports:[],
-  providers: [],
-  entryComponents: [],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        NoopAnimationsModule,
+        ComponentModule,
+        MaterialModule,
+        HttpClientModule
+    ],
+    exports: [],
+    providers: [],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

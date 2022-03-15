@@ -8,8 +8,8 @@ import { EditItemComponent } from 'src/app/edit-item/edit-item.component';
 export class GeneralFunctionsService {
   constructor(private snack: MatSnackBar, private dialog: MatDialog) {}
 
-  startTime = this.setTime(6, 0);
-  endTime = this.setTime(23, 0);
+  startTime = this.setTime(5);
+  endTime = this.setTime(23);
   rowHeight = 100;
   dayTitles = [
     'Monday',
@@ -20,6 +20,7 @@ export class GeneralFunctionsService {
     'Saturday',
     'Sunday',
   ];
+
   categories = {
     Food: '#00fff3',
     Study: '#09ff00',
@@ -27,7 +28,8 @@ export class GeneralFunctionsService {
     Other: '#4800ff',
   };
 
-  setTime(h: number, m: number) {
+  setTime(h: number, m: number=0) {
+    console.log(h);
     let x: Date = new Date();
     x.setMinutes(m);
     x.setHours(h);

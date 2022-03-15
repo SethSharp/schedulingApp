@@ -13,19 +13,6 @@ import { GeneralFunctionsService } from '../Services/GeneralFunction/general-fun
   styleUrls: ['./session-dialog.component.scss'],
 })
 export class SessionDialogComponent implements OnInit {
-  warning = '';
-  title = '';
-  color = 'green';
-  startTime: Date = new Date();
-  endTime: Date = new Date();
-  min: Date = new Date();
-  max: Date = new Date();
-  nMin: Date = new Date();
-  nMax: Date = new Date();
-  categories:any;
-
-  selectedCat = 'Select a category';
-
   constructor(
     private dialogRef: MatDialogRef<SessionDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
@@ -43,7 +30,7 @@ export class SessionDialogComponent implements OnInit {
     private sessionServ: SessionService,
     private weeklyS: WeeklyTableService
   ) {
-    this.categories = this.data.categories
+    this.categories = this.data.categories;
     this.startTime = this.data.session.start;
     this.endTime = this.data.session.end;
     this.min = this.data.s;
@@ -55,13 +42,26 @@ export class SessionDialogComponent implements OnInit {
     this.color = this.data.session.colour;
   }
 
+  warning = '';
+  title = '';
+  color = 'green';
+  startTime: Date = this.gService.startTime;
+  endTime: Date = this.gService.endTime;
+  min: Date = new Date();
+  max: Date = new Date();
+  nMin: Date = new Date();
+  nMax: Date = new Date();
+  categories: any;
+
+  selectedCat = 'Select a category';
+
   ngOnInit(): void {}
 
   submitSessionBlock() {
     if (this.checkRanges()) {
       this.gService.openSnack(this.warning);
-      return
-    };
+      return;
+    }
     let obj = new Session(
       this.title,
       this.startTime,
@@ -111,14 +111,20 @@ export class SessionDialogComponent implements OnInit {
     // Open a dialog with the info, then return the cat and set the current cat to
     // the one created
     const dialogRef = this.gService.openEditItemDialog(
-      '','', ["Name...", "Colour..."], "Create new category")
+      '',
+      '',
+      ['Name...', 'Colour...'],
+      'Create new category'
+    );
 
     dialogRef.afterClosed().subscribe((d) => {
       try {
-        this.sessionServ.addCategory({title:d.a, colour:d.b}).subscribe((c) => {
-          this.setCat({title:d.a, colour:d.b})
-          this.categories.push({title:d.a, colour:d.a})
-        })
+        this.sessionServ
+          .addCategory({ title: d.a, colour: d.b })
+          .subscribe((c) => {
+            this.setCat({ title: d.a, colour: d.b });
+            this.categories.push({ title: d.a, colour: d.a });
+          });
       } catch {}
     });
   }

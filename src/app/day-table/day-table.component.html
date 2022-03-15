@@ -1,13 +1,15 @@
 
+<!-- Session design in the day -->
 
-<div *ngFor="let ses of day; let i = index"
+<!-- First line will give the session of the day [ses1, ses2 ... etc] -->
+<div *ngFor="let ses of day.sessions; let i = index"
   [style.height.px]="getHeight(ses)"
   [style.background-color]="getColour(ses)"
-  [style.margin-top.px]="getAmount(ses.start, i, day)"
-  (click)="getFunction(ses.title, i, day)"
+  [style.margin-top.px]="getAmount(ses.start, i, day.sessions)"
+  (click)="getFunction(ses.title, i, day.sessions)"
   class="custom-card"
 >
-  {{ ses.title }}
+  {{ ses.title }}howdy
 </div>
 
-
+<!-- Line 8: Gives all the sessions for the current day, this will help build the structure of the table -->

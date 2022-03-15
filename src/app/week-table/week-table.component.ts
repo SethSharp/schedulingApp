@@ -10,6 +10,7 @@ export class WeekTableComponent implements OnInit {
   constructor(private weeklyS: WeeklyTableService) {}
 
   times = this.weeklyS.times;
+  rowHeight = 0;
   headerContent = this.weeklyS.headerContent;
   @Input() table: any;
   @Input() days: any;
@@ -18,5 +19,6 @@ export class WeekTableComponent implements OnInit {
   viewEditSession = this.weeklyS.viewEditSession;
   openSessionDialog = this.weeklyS.openSessionDialog;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 }
